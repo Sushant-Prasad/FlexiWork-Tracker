@@ -17,10 +17,10 @@ const ShiftPlanSchema = new mongoose.Schema({
   notes: { type: String, default: "" },
 }, { timestamps: true });
 
-// 🧠 Compound index ensures one plan per user per date
+//Compound index ensures one plan per user per date
 ShiftPlanSchema.index({ userId: 1, date: 1 }, { unique: true });
 
-// ⚡ For faster site/date queries (capacity reports)
+//For faster site/date queries (capacity reports)
 ShiftPlanSchema.index({ date: 1, "plannedOffice.site": 1 });
 
 export default mongoose.model("ShiftPlan", ShiftPlanSchema);
