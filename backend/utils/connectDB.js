@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-dotenv.config(); // Load .env values
+dotenv.config(); 
 
 // Create a connection tracker object
 const connection = {
