@@ -14,36 +14,36 @@ How it works
 */
 
 const getTokenFromRequest = (req) => {
-  const authHeader = req.headers.authorization;
+  const authHeader = req.headers.authorization; // Authorization: Bearer <token>
   if (authHeader && authHeader.startsWith("Bearer ")) {
-    return authHeader.split(" ")[1];
+    return authHeader.split(" ")[1]; // Extract token portion
   }
-  return req.cookies?.token || req.cookies?.jwt || null;
+  return req.cookies?.token || req.cookies?.jwt || null; // Fallback to cookies
 };
 
 const authMiddleware = async (req, res, next) => {
   try {
-    const token = getTokenFromRequest(req);
+    const token = getTokenFromRequest(req); // Read token from header/cookies
     if (!token) {
       return res.status(401).json({ message: "Authorization token missing" });
     }
 
-    const secret = process.env.JWT_SECRET;
+    const secret = process.env.JWT_SECRET; // JWT signing key
     if (!secret) {
       return res.status(500).json({ message: "JWT_SECRET is not set" });
     }
 
-    const payload = jwt.verify(token, secret);
-    const user = await User.findById(payload.id).select("-password");
+    const payload = jwt.verify(token, secret); // Validate token and decode payload
+    const user = await User.findById(payload.id).select("-password"); // Load user without password
 
     if (!user) {
       return res.status(401).json({ message: "User not found" });
     }
 
-    req.user = user;
+    req.user = user; // Attach authenticated user for downstream handlers
     return next();
   } catch (error) {
-    return res.status(401).json({ message: "Invalid or expired token" });
+    return res.status(401).json({ message: "Invalid or expired token" }); // Token invalid/expired
   }
 };
 
