@@ -9,10 +9,10 @@ How it works
 */
 
 const errorMiddleware = (err, req, res, next) => {
-  const status = err.statusCode || err.status || 500;
-  const message = err.message || "Server error";
+  const status = err.statusCode || err.status || 500; // Prefer explicit status codes
+  const message = err.message || "Server error"; // Fallback message
 
-  res.status(status).json({ message });
+  res.status(status).json({ message }); // Standard JSON error response
 };
 
 export default errorMiddleware;
