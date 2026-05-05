@@ -9,7 +9,7 @@ How it works
 */
 
 const notFoundMiddleware = (req, res, next) => {
-  res.status(404).json({ message: `Route not found: ${req.originalUrl}` });
+  res.status(404).json({ message: `Route not found: ${req.originalUrl}` }); // Return a standard 404 payload for unmatched routes
 };
 
 export default notFoundMiddleware;
