@@ -10,16 +10,16 @@ How it works
 
 const roleMiddleware = (...allowedRoles) => {
   return (req, res, next) => {
-    const role = req.user?.role;
+    const role = req.user?.role; // Extract role from authenticated user (set by authMiddleware)
     if (!role) {
-      return res.status(401).json({ message: "Unauthorized" });
+      return res.status(401).json({ message: "Unauthorized" }); // No role found
     }
 
     if (!allowedRoles.includes(role)) {
-      return res.status(403).json({ message: "Forbidden: insufficient role" });
+      return res.status(403).json({ message: "Forbidden: insufficient role" }); // Role not in allowed list
     }
 
-    return next();
+    return next(); // User has a permitted role
   };
 };
 
