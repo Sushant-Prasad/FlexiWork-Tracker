@@ -12,15 +12,15 @@ How it works
 */
 
 const validateMiddleware = (req, res, next) => {
-  const errors = validationResult(req);
+  const errors = validationResult(req); // Gather validation errors from express-validator
   if (!errors.isEmpty()) {
     return res.status(400).json({
-      message: "Validation failed",
-      errors: errors.array(),
+      message: "Validation failed", // Brief error summary
+      errors: errors.array(), // Detailed array of validation error objects
     });
   }
 
-  return next();
+  return next(); // No validation errors; proceed to the next middleware/handler
 };
 
 export default validateMiddleware;
