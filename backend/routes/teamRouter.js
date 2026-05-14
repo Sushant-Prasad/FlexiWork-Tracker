@@ -15,10 +15,9 @@ import {
 /*
 Team Routes
 Purpose
-- Team CRUD and membership management with role-based access control.
 */
 
-const router = express.Router();
+const teamRouter = express.Router();
 
 // Common param validators to keep handlers clean.
 const teamIdParam = [param("id").isMongoId().withMessage("Team id must be valid")];
@@ -48,7 +47,7 @@ const addMembersValidators = [
 ];
 
 // POST /api/teams - create team (SYSTEM_ADMIN only)
-router.post(
+teamRouter.post(
   "/",
   authMiddleware,
   roleMiddleware("SYSTEM_ADMIN"),
@@ -58,10 +57,10 @@ router.post(
 );
 
 // GET /api/teams - list teams (SYSTEM_ADMIN, MANAGER)
-router.get("/", authMiddleware, roleMiddleware("SYSTEM_ADMIN", "MANAGER"), listTeams);
+teamRouter.get("/", authMiddleware, roleMiddleware("SYSTEM_ADMIN", "MANAGER"), listTeams);
 
 // GET /api/teams/:id - team detail (SYSTEM_ADMIN, MANAGER)
-router.get(
+teamRouter.get(
   "/:id",
   authMiddleware,
   roleMiddleware("SYSTEM_ADMIN", "MANAGER"),
@@ -71,7 +70,7 @@ router.get(
 );
 
 // PUT /api/teams/:id - update team fields (SYSTEM_ADMIN, MANAGER)
-router.put(
+teamRouter.put(
   "/:id",
   authMiddleware,
   roleMiddleware("SYSTEM_ADMIN", "MANAGER"),
@@ -82,7 +81,7 @@ router.put(
 );
 
 // POST /api/teams/:id/members - add members (SYSTEM_ADMIN, MANAGER)
-router.post(
+teamRouter.post(
   "/:id/members",
   authMiddleware,
   roleMiddleware("SYSTEM_ADMIN", "MANAGER"),
@@ -93,7 +92,7 @@ router.post(
 );
 
 // DELETE /api/teams/:id/members/:userId - remove member (SYSTEM_ADMIN, MANAGER)
-router.delete(
+teamRouter.delete(
   "/:id/members/:userId",
   authMiddleware,
   roleMiddleware("SYSTEM_ADMIN", "MANAGER"),
@@ -103,4 +102,4 @@ router.delete(
   removeMember
 );
 
-export default router;
+export default teamRouter;
