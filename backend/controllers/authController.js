@@ -49,6 +49,12 @@ export const registerUser = async (req, res) => {
 			return res.status(400).json({ message: "Name, email, and password are required" });
 		}
 
+		const allowedRoles = ["EMPLOYEE", "MANAGER", "SYSTEM_ADMIN"];
+		const normalizedRole = role ? String(role).trim().toUpperCase() : "EMPLOYEE";
+		if (!allowedRoles.includes(normalizedRole)) {
+			return res.status(400).json({ message: "Invalid role" });
+		}
+
 		const existingUser = await User.findOne({ email }); // Check for duplicate email
 		if (existingUser) {
 			return res.status(409).json({ message: "Email already in use" });
@@ -59,7 +65,7 @@ export const registerUser = async (req, res) => {
 			name,
 			email,
 			password: hashedPassword, // Store hashed password, never plain text
-			role,
+			role: normalizedRole,
 		});
 
 		const token = signToken(user._id); // Generate JWT for newly registered user
