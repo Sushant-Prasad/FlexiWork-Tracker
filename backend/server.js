@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import { connectToDB } from "./utils/connectDB.js";
+import authRouter from "./routes/authRouter.js";
 import teamRouter from "./routes/teamRouter.js";
 dotenv.config();
 
@@ -9,6 +10,9 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
+
+// Auth APIs
+app.use("/api/auth", authRouter);
 
 // Team APIs
 app.use("/api/teams", teamRouter);
