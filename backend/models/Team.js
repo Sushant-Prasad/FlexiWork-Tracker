@@ -7,12 +7,11 @@ const TeamSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
-      index: true,
     },
     members: [
       { type: mongoose.Schema.Types.ObjectId, ref: "User", index: true },
     ],
-    site: { type: String, default: "", index: true }, // e.g., 'BLR-1'
+    site: { type: String, default: "" }, // e.g., 'BLR-1'
     officeCapacity: { type: Number, default: 0 }, // number of desks for the team/site
   },
   { timestamps: true }
