@@ -10,6 +10,7 @@ import "./cron/nightlyWorkLogCheck.js"; // Register nightly cron
 import attendanceRoutes from "./routes/attendanceRoutes.js"; // Attendance routes
 import "./cron/attendanceSnapshot.js"; // Register attendance snapshot cron
 import projectRoutes from "./routes/projectRoutes.js"; // Project routes
+import taskRoutes from "./routes/taskRoutes.js"; // Task routes
 dotenv.config();
 
 
@@ -38,6 +39,9 @@ app.use("/api/attendance", attendanceRoutes);
 
 // Project APIs
 app.use("/api/projects", projectRoutes);
+
+// Task APIs
+app.use("/api/tasks", taskRoutes);
 
 
 // Start server
