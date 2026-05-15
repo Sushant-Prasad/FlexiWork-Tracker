@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import { connectToDB } from "./utils/connectDB.js";
 import authRouter from "./routes/authRouter.js";
 import teamRouter from "./routes/teamRouter.js";
+import shiftPlanRoutes from "./routes/shiftPlanRoutes.js";
 dotenv.config();
 
 
@@ -16,6 +17,9 @@ app.use("/api/auth", authRouter);
 
 // Team APIs
 app.use("/api/teams", teamRouter);
+
+// Shift plan APIs
+app.use("/api/shiftplans", shiftPlanRoutes);
 
 
 // Start server
