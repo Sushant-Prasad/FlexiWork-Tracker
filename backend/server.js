@@ -9,6 +9,7 @@ import userRoutes from "./routes/userRoutes.js"; // User routes
 import "./cron/nightlyWorkLogCheck.js"; // Register nightly cron
 import attendanceRoutes from "./routes/attendanceRoutes.js"; // Attendance routes
 import "./cron/attendanceSnapshot.js"; // Register attendance snapshot cron
+import projectRoutes from "./routes/projectRoutes.js"; // Project routes
 dotenv.config();
 
 
@@ -34,6 +35,9 @@ app.use("/api/users", userRoutes);
 
 // Attendance APIs
 app.use("/api/attendance", attendanceRoutes);
+
+// Project APIs
+app.use("/api/projects", projectRoutes);
 
 
 // Start server
