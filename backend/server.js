@@ -5,6 +5,7 @@ import authRouter from "./routes/authRouter.js"; // Auth routes
 import teamRouter from "./routes/teamRouter.js"; // Team routes
 import shiftPlanRoutes from "./routes/shiftPlanRoutes.js"; // Shift plan routes
 import workLogRouter from "./routes/workLogRouter.js"; // Work log routes
+import userRoutes from "./routes/userRoutes.js"; // User routes
 import "./cron/nightlyWorkLogCheck.js"; // Register nightly cron
 dotenv.config();
 
@@ -25,6 +26,9 @@ app.use("/api/shiftplans", shiftPlanRoutes);
 
 // Work log APIs
 app.use("/api/worklogs", workLogRouter);
+
+// User APIs
+app.use("/api/users", userRoutes);
 
 
 // Start server
