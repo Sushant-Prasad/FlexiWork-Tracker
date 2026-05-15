@@ -1,32 +1,33 @@
-import mongoose from "mongoose";
+import mongoose from "mongoose"; // MongoDB ODM
 
+// Tracks daily attendance and actual work mode for each user
 const WorkLogSchema = new mongoose.Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+      required: true, // Each work log belongs to a user
     },
-    date: { type: String, required: true }, // YYYY-MM-DD
+    date: { type: String, required: true }, // YYYY-MM-DD (string for simple range queries)
     actualMode: {
       type: String,
       enum: ["REMOTE", "OFFICE", "HYBRID", "ABSENT", "UNLOGGED"],
-      default: "UNLOGGED",
+      default: "UNLOGGED", // Default until user logs a mode
     },
-    checkInAt: { type: Date },
-    checkOutAt: { type: Date },
-    workedHours: { type: Number, default: 0 },
-    comments: { type: String, default: "" },
+    checkInAt: { type: Date }, // First check-in time
+    checkOutAt: { type: Date }, // Last check-out time
+    workedHours: { type: Number, default: 0 }, // Calculated hours for the day
+    comments: { type: String, default: "" }, // Optional user notes
     geo: {
-      lat: Number,
-      lon: Number,
-      capturedAt: Date,
-      source: String,
+      lat: Number, // Latitude captured at check-in
+      lon: Number, // Longitude captured at check-in
+      capturedAt: Date, // Timestamp when geo was captured
+      source: String, // GPS/network/etc
     },
-    source: { type: String, enum: ["SELF", "AUTO"], default: "SELF" },
-    editableUntil: { type: Date },
+    source: { type: String, enum: ["SELF", "AUTO"], default: "SELF" }, // Entry origin
+    editableUntil: { type: Date }, // Cutoff for edits
   },
-  { timestamps: true }
+  { timestamps: true } // Adds createdAt and updatedAt
 );
 
 // One record per user per date
