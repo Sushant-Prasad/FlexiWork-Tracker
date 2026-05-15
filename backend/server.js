@@ -7,6 +7,8 @@ import shiftPlanRoutes from "./routes/shiftPlanRoutes.js"; // Shift plan routes
 import workLogRouter from "./routes/workLogRouter.js"; // Work log routes
 import userRoutes from "./routes/userRoutes.js"; // User routes
 import "./cron/nightlyWorkLogCheck.js"; // Register nightly cron
+import attendanceRoutes from "./routes/attendanceRoutes.js"; // Attendance routes
+import "./cron/attendanceSnapshot.js"; // Register attendance snapshot cron
 dotenv.config();
 
 
@@ -29,6 +31,9 @@ app.use("/api/worklogs", workLogRouter);
 
 // User APIs
 app.use("/api/users", userRoutes);
+
+// Attendance APIs
+app.use("/api/attendance", attendanceRoutes);
 
 
 // Start server
