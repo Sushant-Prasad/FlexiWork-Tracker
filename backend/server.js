@@ -1,16 +1,18 @@
-import express from "express";
-import dotenv from "dotenv";
-import { connectToDB } from "./utils/connectDB.js";
-import authRouter from "./routes/authRouter.js";
-import teamRouter from "./routes/teamRouter.js";
-import shiftPlanRoutes from "./routes/shiftPlanRoutes.js";
+import express from "express"; // Express app
+import dotenv from "dotenv"; // Env loader
+import { connectToDB } from "./utils/connectDB.js"; // Database connector
+import authRouter from "./routes/authRouter.js"; // Auth routes
+import teamRouter from "./routes/teamRouter.js"; // Team routes
+import shiftPlanRoutes from "./routes/shiftPlanRoutes.js"; // Shift plan routes
+import workLogRouter from "./routes/workLogRouter.js"; // Work log routes
+import "./cron/nightlyWorkLogCheck.js"; // Register nightly cron
 dotenv.config();
 
 
-const app = express();
-const PORT = process.env.PORT || 5000;
+const app = express(); // Create express app
+const PORT = process.env.PORT || 5000; // Port from env or default
 
-app.use(express.json());
+app.use(express.json()); // Parse JSON bodies
 
 // Auth APIs
 app.use("/api/auth", authRouter);
@@ -20,6 +22,9 @@ app.use("/api/teams", teamRouter);
 
 // Shift plan APIs
 app.use("/api/shiftplans", shiftPlanRoutes);
+
+// Work log APIs
+app.use("/api/worklogs", workLogRouter);
 
 
 // Start server
