@@ -3,6 +3,7 @@ import Team from "../models/Team.js"; // Team model
 import { canDeleteProject, canManageProject } from "../utils/projectPermissions.js"; // Permission checks
 import { isValidProjectTransition } from "../utils/projectStatusFlow.js"; // Status transitions
 import { validateProjectData } from "../utils/projectValidation.js"; // Project validation
+import { sendNotification } from "../utils/sendNotification.js"; // Notification helper
 
 // Create a new project (manager/admin only)
 export const createProject = async (req, res) => {
@@ -43,6 +44,24 @@ export const createProject = async (req, res) => {
       deadline: deadline || null,
       status: status || "PLANNING",
     });
+
+    const recipients = new Set(
+      [...(team.members || []), team.managerId].filter(Boolean).map((id) => String(id))
+    ); // Notify team members and manager
+
+    if (recipients.size > 0) {
+      await Promise.all(
+        Array.from(recipients).map((userId) =>
+          sendNotification({
+            userId,
+            title: "New project created",
+            message: `Project "${project.title}" has been created for your team.`,
+            type: "PROJECT_CREATED",
+            relatedId: project._id,
+          })
+        )
+      );
+    }
 
     return res.status(201).json({
       success: true,

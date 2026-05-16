@@ -3,6 +3,7 @@ import Project from "../models/Project.js"; // Project model
 import User from "../models/User.js"; // User model
 import { canUpdateTaskStatus } from "../utils/taskPermissions.js"; // Role-based status rules
 import { validateTaskData } from "../utils/taskValidation.js"; // Task validation
+import { sendNotification } from "../utils/sendNotification.js"; // Notification helper
 
 // POST /api/tasks - manager creates a task
 export const createTask = async (req, res) => {
@@ -43,6 +44,14 @@ export const createTask = async (req, res) => {
 			priority: priority || "MEDIUM",
 			effortHrs: effortHrs || 0,
 			dueDate: dueDate || null,
+		});
+
+		await sendNotification({
+			userId: assignedTo,
+			title: "New task assigned",
+			message: `You have been assigned: ${task.title}.`,
+			type: "TASK_ASSIGNED",
+			relatedId: task._id,
 		});
 
 		return res.status(201).json({
@@ -109,6 +118,8 @@ export const updateTask = async (req, res) => {
 			return res.status(400).json({ success: false, message: "Validation failed", errors: validation.errors });
 		}
 
+		const previousStatus = task.status; // Track previous status
+
 		if (status !== undefined) {
 			const allowed = canUpdateTaskStatus({
 				role,
@@ -148,6 +159,16 @@ export const updateTask = async (req, res) => {
 		}
 
 		const updated = await task.save(); // Persist updates
+
+		if (status === "DONE" && previousStatus !== "DONE") {
+			await sendNotification({
+				userId: task.assignedBy,
+				title: "Task completed",
+				message: `${updated.title} has been marked as DONE.`,
+				type: "TASK_COMPLETED",
+				relatedId: updated._id,
+			});
+		}
 
 		return res.status(200).json({
 			success: true,

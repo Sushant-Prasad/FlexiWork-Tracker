@@ -1,6 +1,6 @@
 import ShiftPlan from "../models/ShiftPlan.js"; // Shift plan collection
 import LeaveRequest from "../models/LeaveRequest.js"; // Leave requests for conflict checks
-import Notification from "../models/Notifications.js"; // Notifications for publish flow
+import { sendNotification } from "../utils/sendNotification.js"; // Notification helper
 import Audit from "../models/Audit.js"; // Audit logs for updates
 import Team from "../models/Team.js"; // Team data for access and capacity
 import User from "../models/User.js"; // User data for ownership checks
@@ -317,18 +317,18 @@ export const publishPlans = async (req, res) => {
 			new Set(unlocked.map((plan) => String(plan.userId)))
 		); // Notify each user once
 
-		const notifications = uniqueUsers.map((userId) => ({
-			userId,
-			type: "PLAN_PUBLISHED",
-			payload: {
-				teamId,
-				startDate: startDate || null,
-				endDate: endDate || null,
-			},
-		}));
-
-		if (notifications.length > 0) {
-			await Notification.insertMany(notifications); // Queue notifications
+		if (uniqueUsers.length > 0) {
+			await Promise.all(
+				uniqueUsers.map((userId) =>
+					sendNotification({
+						userId,
+						title: "Shift plans published",
+						message: `Your shift plan has been published${startDate ? ` for ${startDate}` : ""}${endDate ? ` to ${endDate}` : ""}.`,
+						type: "PLAN_PUBLISHED",
+						relatedId: teamId,
+					})
+				)
+			);
 		}
 
 		return res.status(200).json({ published: unlocked.length });

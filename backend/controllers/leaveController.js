@@ -1,9 +1,9 @@
 import LeaveRequest from "../models/LeaveRequest.js"; // Leave requests
 import ShiftPlan from "../models/ShiftPlan.js"; // Shift plans
-import User from "../models/User.js"; // User model
 import { canApplyLeave, canApproveLeave } from "../utils/leavePermissions.js"; // Permission checks
 import { isValidLeaveTransition } from "../utils/leaveStatusFlow.js"; // Status transitions
 import { validateLeaveRequest } from "../utils/leaveValidation.js"; // Leave validation
+import { sendNotification } from "../utils/sendNotification.js"; // Notification helper
 
 // POST /api/leaves - employee applies for leave
 export const createLeaveRequest = async (req, res) => {
@@ -118,6 +118,14 @@ export const approveLeave = async (req, res) => {
 			}
 		);
 
+		await sendNotification({
+			userId: leave.userId,
+			title: "Leave approved",
+			message: `Your leave request from ${leave.startDate} to ${leave.endDate} has been approved.`,
+			type: "LEAVE_APPROVED",
+			relatedId: leave._id,
+		});
+
 		return res.status(200).json({ success: true, message: "Leave approved", data: leave });
 	} catch (error) {
 		return res
@@ -153,6 +161,14 @@ export const rejectLeave = async (req, res) => {
 		leave.decisionAt = leave.reviewedAt; // Keep legacy field updated
 
 		await leave.save();
+
+		await sendNotification({
+			userId: leave.userId,
+			title: "Leave rejected",
+			message: `Your leave request from ${leave.startDate} to ${leave.endDate} was rejected.`,
+			type: "LEAVE_REJECTED",
+			relatedId: leave._id,
+		});
 
 		return res.status(200).json({ success: true, message: "Leave rejected", data: leave });
 	} catch (error) {

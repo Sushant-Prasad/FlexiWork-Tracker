@@ -1,7 +1,7 @@
 import cron from "node-cron"; // Scheduler for nightly tasks
 import WorkLog from "../models/WorkLog.js"; // Work log model
 import User from "../models/User.js"; // User model
-import Notification from "../models/Notifications.js"; // Notification model
+import { sendNotification } from "../utils/sendNotification.js"; // Notification helper
 import { getEditableUntil, getTodayDate } from "../utils/dateUtils.js"; // Date helpers
 
 /*
@@ -27,10 +27,11 @@ cron.schedule("15 22 * * *", async () => {
 					source: "AUTO", // Created by system
 				});
 
-				await Notification.create({
+				await sendNotification({
 					userId: user._id,
+					title: "Missing work log",
+					message: `You have not logged your work for ${today}.`,
 					type: "MISSING_LOG",
-					payload: { date: today }, // Include date in payload
 				});
 			}
 		}

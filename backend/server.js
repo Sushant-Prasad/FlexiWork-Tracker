@@ -12,6 +12,7 @@ import "./cron/attendanceSnapshot.js"; // Register attendance snapshot cron
 import projectRoutes from "./routes/projectRoutes.js"; // Project routes
 import taskRoutes from "./routes/taskRoutes.js"; // Task routes
 import leaveRoutes from "./routes/leaveRoutes.js"; // Leave routes
+import notificationRoutes from "./routes/notificationRoutes.js"; // Notification routes
 dotenv.config();
 
 
@@ -46,6 +47,9 @@ app.use("/api/tasks", taskRoutes);
 
 // Leave APIs
 app.use("/api/leaves", leaveRoutes);
+
+// Notification APIs
+app.use("/api/notifications", notificationRoutes);
 
 
 // Start server
