@@ -1,5 +1,6 @@
 import express from "express"; // Express app
 import dotenv from "dotenv"; // Env loader
+import cors from "cors"; // CORS middleware
 import { connectToDB } from "./utils/connectDB.js"; // Database connector
 import authRouter from "./routes/authRouter.js"; // Auth routes
 import teamRouter from "./routes/teamRouter.js"; // Team routes
@@ -18,6 +19,15 @@ dotenv.config();
 
 const app = express(); // Create express app
 const PORT = process.env.PORT || 5000; // Port from env or default
+
+const allowedOrigins = [process.env.CLIENT_URL || "http://localhost:5173"];
+
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true,
+  })
+);
 
 app.use(express.json()); // Parse JSON bodies
 

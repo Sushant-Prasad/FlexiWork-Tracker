@@ -8,8 +8,8 @@ import {
   Mail,
   User,
 } from "lucide-react";
-import axios from "axios";
 import toast from "react-hot-toast";
+import { useAuth } from "../context/AuthContext.jsx";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -33,16 +33,15 @@ const Register = () => {
     });
   };
 
+  const { register } = useAuth();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       setLoading(true);
 
-      await axios.post(
-        "http://localhost:3001/api/auth/register",
-        formData
-      );
+      await register(formData);
 
       toast.success(
         "Registration successful"
@@ -52,10 +51,7 @@ const Register = () => {
 
     } catch (error) {
 
-      toast.error(
-        error.response?.data?.message ||
-        "Registration failed"
-      );
+      toast.error(error.message || "Registration failed");
 
     } finally {
       setLoading(false);

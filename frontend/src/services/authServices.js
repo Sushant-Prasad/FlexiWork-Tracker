@@ -2,7 +2,7 @@ import axios from "axios"; // HTTP client
 
 // Axios instance for auth API calls
 const api = axios.create({
-	baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000/api",
+	baseURL: import.meta.env.VITE_API_URL || "http://localhost:3002/api",
 });
 
 // Extract a readable error message

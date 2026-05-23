@@ -2,9 +2,9 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, Lock, Mail } from "lucide-react";
-import axios from "axios";
 import toast from "react-hot-toast";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/AuthContext.jsx";
+import { getRoleDefaultPath } from "../constants/navigation.js";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -34,31 +34,19 @@ const Login = () => {
     try {
       setLoading(true);
 
-      const res = await axios.post(
-        "http://localhost:3001/api/auth/login",
-        formData
-      );
-
-      login(res.data);
+      const result = await login({
+        email: formData.email,
+        password: formData.password,
+      });
 
       toast.success("Login successful");
 
-      const role = res.data.user.role;
-
-      if (role === "EMPLOYEE") {
-        navigate("/employee/dashboard");
-      } else if (role === "MANAGER") {
-        navigate("/manager/dashboard");
-      } else {
-        navigate("/admin/dashboard");
-      }
+      const destination = getRoleDefaultPath(result?.user?.role);
+      navigate(destination, { replace: true });
 
     } catch (error) {
 
-      toast.error(
-        error.response?.data?.message ||
-        "Login failed"
-      );
+      toast.error(error.message || "Login failed");
 
     } finally {
       setLoading(false);
