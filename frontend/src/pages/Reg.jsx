@@ -59,21 +59,21 @@ const Register = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-950 px-4">
+    <div className="flex min-h-screen items-center justify-center bg-background px-4">
 
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md rounded-3xl border border-zinc-800 bg-zinc-900/80 p-8 shadow-2xl backdrop-blur-xl"
+        className="w-full max-w-md rounded-3xl border border-border bg-card p-8 shadow-2xl"
       >
 
         <div className="mb-8 text-center">
 
-          <h1 className="text-4xl font-bold text-white">
+          <h1 className="text-4xl font-bold text-foreground">
             Create Account
           </h1>
 
-          <p className="mt-3 text-zinc-400">
+          <p className="mt-3 text-muted-foreground">
             Join FlexiWork Tracker
           </p>
 
@@ -87,15 +87,15 @@ const Register = () => {
           {/* Name */}
           <div>
 
-            <label className="mb-2 block text-sm text-zinc-300">
+            <label className="mb-2 block text-sm text-muted-foreground">
               Full Name
             </label>
 
-            <div className="flex items-center rounded-2xl border border-zinc-700 bg-zinc-950 px-4">
+            <div className="flex items-center rounded-2xl border border-input bg-background px-4">
 
               <User
                 size={18}
-                className="text-zinc-500"
+                className="text-muted-foreground"
               />
 
               <input
@@ -105,7 +105,7 @@ const Register = () => {
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="w-full bg-transparent px-3 py-4 text-white placeholder:text-zinc-500 outline-none"
+                className="w-full bg-transparent px-3 py-4 text-foreground placeholder:text-muted-foreground outline-none"
               />
 
             </div>
@@ -115,15 +115,15 @@ const Register = () => {
           {/* Email */}
           <div>
 
-            <label className="mb-2 block text-sm text-zinc-300">
+            <label className="mb-2 block text-sm text-muted-foreground">
               Email
             </label>
 
-            <div className="flex items-center rounded-2xl border border-zinc-700 bg-zinc-950 px-4">
+            <div className="flex items-center rounded-2xl border border-input bg-background px-4">
 
               <Mail
                 size={18}
-                className="text-zinc-500"
+                className="text-muted-foreground"
               />
 
               <input
@@ -133,7 +133,7 @@ const Register = () => {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="w-full bg-transparent px-3 py-4 text-white placeholder:text-zinc-500 outline-none"
+                className="w-full bg-transparent px-3 py-4 text-foreground placeholder:text-muted-foreground outline-none"
               />
 
             </div>
@@ -143,15 +143,15 @@ const Register = () => {
           {/* Password */}
           <div>
 
-            <label className="mb-2 block text-sm text-zinc-300">
+            <label className="mb-2 block text-sm text-muted-foreground">
               Password
             </label>
 
-            <div className="flex items-center rounded-2xl border border-zinc-700 bg-zinc-950 px-4">
+            <div className="flex items-center rounded-2xl border border-input bg-background px-4">
 
               <Lock
                 size={18}
-                className="text-zinc-500"
+                className="text-muted-foreground"
               />
 
               <input
@@ -165,7 +165,7 @@ const Register = () => {
                 value={formData.password}
                 onChange={handleChange}
                 required
-                className="w-full bg-transparent px-3 py-4 text-white placeholder:text-zinc-500 outline-none"
+                className="w-full bg-transparent px-3 py-4 text-foreground placeholder:text-muted-foreground outline-none"
               />
 
               <button
@@ -179,12 +179,12 @@ const Register = () => {
                 {showPassword ? (
                   <EyeOff
                     size={18}
-                    className="text-zinc-500"
+                    className="text-muted-foreground"
                   />
                 ) : (
                   <Eye
                     size={18}
-                    className="text-zinc-500"
+                    className="text-muted-foreground"
                   />
                 )}
               </button>
@@ -196,7 +196,7 @@ const Register = () => {
           {/* Role */}
           <div>
 
-            <label className="mb-2 block text-sm text-zinc-300">
+            <label className="mb-2 block text-sm text-muted-foreground">
               Role
             </label>
 
@@ -204,7 +204,7 @@ const Register = () => {
               name="role"
               value={formData.role}
               onChange={handleChange}
-              className="w-full rounded-2xl border border-zinc-700 bg-zinc-950 px-4 py-4 text-white outline-none"
+              className="w-full rounded-2xl border border-input bg-background px-4 py-4 text-foreground outline-none"
             >
 
               <option value="EMPLOYEE">
@@ -227,7 +227,7 @@ const Register = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-2xl bg-blue-600 py-4 font-semibold text-white transition hover:bg-blue-700"
+            className="w-full rounded-2xl bg-primary py-4 font-semibold text-primary-foreground transition hover:bg-primary/90"
           >
             {loading
               ? "Creating Account..."
@@ -236,13 +236,13 @@ const Register = () => {
 
         </form>
 
-        <p className="mt-6 text-center text-sm text-zinc-400">
+        <p className="mt-6 text-center text-sm text-muted-foreground">
 
           Already have an account?{" "}
 
           <Link
             to="/login"
-            className="font-medium text-blue-500 hover:underline"
+            className="font-medium text-primary hover:underline"
           >
             Login
           </Link>

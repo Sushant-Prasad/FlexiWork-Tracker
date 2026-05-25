@@ -7,7 +7,7 @@ const AppLayout = () => {
   const { user } = useAuth();
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white">
+    <div className="min-h-screen bg-background text-foreground">
       <Navbar />
       <div className="flex">
         {user ? <Sidebar /> : null}

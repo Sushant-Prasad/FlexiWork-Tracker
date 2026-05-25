@@ -38,7 +38,7 @@ const Navbar = () => {
   const isAuthenticated = !!user;
 
   return (
-    <header className="sticky top-0 z-50 border-b border-zinc-800 bg-zinc-950/90 backdrop-blur-xl">
+    <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur-xl">
       
       <div className="flex items-center justify-between px-6 py-4">
 
@@ -52,7 +52,7 @@ const Navbar = () => {
             onClick={() =>
               setMobileMenuOpen(!mobileMenuOpen)
             }
-            className="rounded-lg border border-zinc-800 p-2 text-zinc-300 transition hover:bg-zinc-900 lg:hidden"
+            className="rounded-lg border border-border p-2 text-foreground transition hover:bg-muted lg:hidden"
           >
             {mobileMenuOpen ? (
               <X size={20} />
@@ -66,16 +66,16 @@ const Navbar = () => {
             to="/"
             className="flex items-center gap-3"
           >
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-lg font-bold text-white">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-lg font-bold text-primary-foreground">
               F
             </div>
 
             <div className="hidden sm:block">
-              <h1 className="text-lg font-bold text-white">
+              <h1 className="text-lg font-bold text-foreground">
                 FlexiWork Tracker
               </h1>
 
-              <p className="text-xs text-zinc-400">
+              <p className="text-xs text-muted-foreground">
                 Hybrid Workforce Platform
               </p>
             </div>
@@ -97,7 +97,7 @@ const Navbar = () => {
               {/* Login */}
               <Link
                 to="/login"
-                className="rounded-xl border border-zinc-700 px-5 py-2 text-sm font-medium text-zinc-300 transition hover:bg-zinc-900 hover:text-white"
+                className="rounded-xl border border-border px-5 py-2 text-sm font-medium text-foreground transition hover:bg-muted"
               >
                 Login
               </Link>
@@ -105,7 +105,7 @@ const Navbar = () => {
               {/* Register */}
               <Link
                 to="/register"
-                className="rounded-xl bg-blue-600 px-5 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
+                className="rounded-xl bg-primary px-5 py-2 text-sm font-medium text-primary-foreground transition hover:bg-primary/90"
               >
                 Register
               </Link>
@@ -113,12 +113,12 @@ const Navbar = () => {
           ) : (
             <>
               {/* Notification */}
-              <button className="relative rounded-xl border border-zinc-800 p-2 text-zinc-300 transition hover:bg-zinc-900 hover:text-white">
+              <button className="relative rounded-xl border border-border p-2 text-foreground transition hover:bg-muted">
 
                 <Bell size={20} />
 
                 {/* Notification Badge */}
-                <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">
                   3
                 </span>
 
@@ -133,22 +133,22 @@ const Navbar = () => {
                   onClick={() =>
                     setProfileOpen(!profileOpen)
                   }
-                  className="flex items-center gap-3 rounded-xl border border-zinc-800 px-3 py-2 transition hover:bg-zinc-900"
+                  className="flex items-center gap-3 rounded-xl border border-border px-3 py-2 transition hover:bg-muted"
                 >
 
                   {/* Avatar */}
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 font-semibold text-white">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary font-semibold text-primary-foreground">
                     {user?.name?.charAt(0) || "U"}
                   </div>
 
                   {/* User Info */}
                   <div className="hidden text-left sm:block">
 
-                    <p className="text-sm font-medium text-white">
+                    <p className="text-sm font-medium text-foreground">
                       {user?.name}
                     </p>
 
-                    <p className="text-xs text-zinc-400">
+                    <p className="text-xs text-muted-foreground">
                       {user?.role}
                     </p>
 
@@ -172,17 +172,17 @@ const Navbar = () => {
                         opacity: 0,
                         y: 10,
                       }}
-                      className="absolute right-0 mt-3 w-64 overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900 shadow-2xl"
+                      className="absolute right-0 mt-3 w-64 overflow-hidden rounded-2xl border border-border bg-card shadow-2xl"
                     >
 
                       {/* Profile Header */}
-                      <div className="border-b border-zinc-800 px-5 py-4">
+                      <div className="border-b border-border px-5 py-4">
 
-                        <p className="font-medium text-white">
+                        <p className="font-medium text-foreground">
                           {user?.name}
                         </p>
 
-                        <p className="mt-1 text-sm text-zinc-400">
+                        <p className="mt-1 text-sm text-muted-foreground">
                           {user?.email}
                         </p>
 
@@ -193,7 +193,7 @@ const Navbar = () => {
 
                         <Link
                           to="/profile"
-                          className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-zinc-300 transition hover:bg-zinc-800 hover:text-white"
+                          className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-foreground transition hover:bg-muted"
                         >
                           <User size={18} />
                           My Profile
@@ -201,7 +201,7 @@ const Navbar = () => {
 
                         <Link
                           to="/settings"
-                          className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-zinc-300 transition hover:bg-zinc-800 hover:text-white"
+                          className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-foreground transition hover:bg-muted"
                         >
                           <Settings size={18} />
                           Settings
@@ -212,7 +212,7 @@ const Navbar = () => {
                             logout();
                             navigate("/login");
                           }}
-                          className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-red-400 transition hover:bg-red-500/10"
+                          className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-destructive transition hover:bg-destructive/10"
                         >
                           <LogOut size={18} />
                           Logout
@@ -249,14 +249,14 @@ const Navbar = () => {
               opacity: 0,
               height: 0,
             }}
-            className="border-t border-zinc-800 bg-zinc-950 lg:hidden"
+            className="border-t border-border bg-background lg:hidden"
           >
 
             <div className="flex flex-col gap-2 px-6 py-5">
 
               <NavLink
                 to={dashboardPath}
-                className="rounded-xl px-4 py-3 text-zinc-300 transition hover:bg-zinc-900"
+                className="rounded-xl px-4 py-3 text-foreground transition hover:bg-muted"
               >
                 Dashboard
               </NavLink>

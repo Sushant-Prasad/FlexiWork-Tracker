@@ -50,11 +50,11 @@ const features = [
 
 const Home = () => {
   return (
-    <div className="min-h-screen bg-zinc-950 text-white">
+    <div className="min-h-screen bg-background text-foreground">
       
       {/* Hero Section */}
-      <section className="relative overflow-hidden border-b border-zinc-800">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-cyan-500/10 blur-3xl" />
+      <section className="relative overflow-hidden border-b border-border">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(20,40,29,0.18),_transparent_60%)]" />
 
         <div className="relative max-w-7xl mx-auto px-6 py-24 lg:flex lg:items-center lg:justify-between">
           
@@ -65,15 +65,15 @@ const Home = () => {
             transition={{ duration: 0.6 }}
             className="max-w-2xl"
           >
-            <p className="inline-block rounded-full border border-blue-500/30 bg-blue-500/10 px-4 py-1 text-sm text-blue-400">
+            <p className="inline-block rounded-full border border-border bg-secondary px-4 py-1 text-sm text-foreground">
               Smart Hybrid Workforce Platform
             </p>
 
             <h1 className="mt-6 text-5xl font-bold leading-tight lg:text-6xl">
-              FlexiWork <span className="text-blue-500">Tracker</span>
+              FlexiWork <span className="text-primary">Tracker</span>
             </h1>
 
-            <p className="mt-6 text-lg text-zinc-400 leading-relaxed">
+            <p className="mt-6 text-lg text-muted-foreground leading-relaxed">
               A modern hybrid work management system that helps
               organizations manage attendance, projects, tasks,
               work modes, leave requests, and productivity analytics.
@@ -82,14 +82,14 @@ const Home = () => {
             <div className="mt-10 flex flex-wrap gap-4">
               <Link
                 to="/login"
-                className="rounded-xl bg-blue-600 px-6 py-3 font-medium transition hover:bg-blue-700"
+                className="rounded-xl bg-primary px-6 py-3 font-medium text-primary-foreground transition hover:bg-primary/90"
               >
                 Get Started
               </Link>
 
               <Link
                 to="/about"
-                className="rounded-xl border border-zinc-700 px-6 py-3 font-medium transition hover:bg-zinc-900"
+                className="rounded-xl border border-border px-6 py-3 font-medium transition hover:bg-muted"
               >
                 Learn More
               </Link>
@@ -103,7 +103,7 @@ const Home = () => {
             transition={{ duration: 0.7 }}
             className="mt-16 lg:mt-0"
           >
-            <div className="rounded-3xl border border-zinc-800 bg-zinc-900/70 p-8 shadow-2xl backdrop-blur-xl">
+            <div className="rounded-3xl border border-border bg-card/90 p-8 shadow-2xl backdrop-blur-xl">
               <img
                 src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f"
                 alt="Team Collaboration"
@@ -121,7 +121,7 @@ const Home = () => {
             Powerful Features
           </h2>
 
-          <p className="mt-4 text-zinc-400 max-w-2xl mx-auto">
+          <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">
             Everything needed to manage hybrid teams,
             attendance, projects, productivity, and collaboration.
           </p>
@@ -138,9 +138,9 @@ const Home = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="rounded-3xl border border-zinc-800 bg-zinc-900/60 p-8 transition hover:border-blue-500/40 hover:shadow-xl"
+                className="rounded-3xl border border-border bg-card p-8 transition hover:border-primary/30 hover:shadow-xl"
               >
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-500/10 text-blue-400">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-secondary text-primary">
                   <Icon size={28} />
                 </div>
 
@@ -148,7 +148,7 @@ const Home = () => {
                   {feature.title}
                 </h3>
 
-                <p className="mt-4 text-zinc-400 leading-relaxed">
+                <p className="mt-4 text-muted-foreground leading-relaxed">
                   {feature.description}
                 </p>
               </motion.div>
@@ -158,32 +158,32 @@ const Home = () => {
       </section>
 
       {/* Stats */}
-      <section className="border-y border-zinc-800 bg-zinc-900/50">
+      <section className="border-y border-border bg-secondary/60">
         <div className="max-w-7xl mx-auto px-6 py-20 grid gap-10 md:grid-cols-3 text-center">
           
           <div>
-            <h3 className="text-5xl font-bold text-blue-500">
+            <h3 className="text-5xl font-bold text-primary">
               99%
             </h3>
-            <p className="mt-3 text-zinc-400">
+            <p className="mt-3 text-muted-foreground">
               Attendance Tracking Accuracy
             </p>
           </div>
 
           <div>
-            <h3 className="text-5xl font-bold text-blue-500">
+            <h3 className="text-5xl font-bold text-primary">
               24/7
             </h3>
-            <p className="mt-3 text-zinc-400">
+            <p className="mt-3 text-muted-foreground">
               Workforce Monitoring
             </p>
           </div>
 
           <div>
-            <h3 className="text-5xl font-bold text-blue-500">
+            <h3 className="text-5xl font-bold text-primary">
               100+
             </h3>
-            <p className="mt-3 text-zinc-400">
+            <p className="mt-3 text-muted-foreground">
               Team Collaboration Features
             </p>
           </div>
@@ -198,13 +198,13 @@ const Home = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           viewport={{ once: true }}
-          className="rounded-3xl border border-zinc-800 bg-gradient-to-r from-blue-500/10 to-purple-500/10 p-12"
+          className="rounded-3xl border border-border bg-[linear-gradient(120deg,_rgba(20,40,29,0.12),_rgba(255,252,220,0.4))] p-12"
         >
           <h2 className="text-4xl font-bold">
             Manage Your Hybrid Workforce Efficiently
           </h2>
 
-          <p className="mt-5 text-zinc-400 text-lg">
+          <p className="mt-5 text-muted-foreground text-lg">
             Improve productivity, attendance tracking,
             and team collaboration with FlexiWork Tracker.
           </p>
@@ -212,7 +212,7 @@ const Home = () => {
           <div className="mt-8">
             <Link
               to="/register"
-              className="rounded-xl bg-blue-600 px-8 py-4 text-lg font-medium transition hover:bg-blue-700"
+              className="rounded-xl bg-primary px-8 py-4 text-lg font-medium text-primary-foreground transition hover:bg-primary/90"
             >
               Start Now
             </Link>
@@ -221,7 +221,7 @@ const Home = () => {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-zinc-800 py-8 text-center text-zinc-500">
+      <footer className="border-t border-border py-8 text-center text-muted-foreground">
         © 2026 FlexiWork Tracker. All rights reserved.
       </footer>
     </div>
