@@ -5,7 +5,7 @@ const AuditSchema = new mongoose.Schema(
     actorId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User", // User who performed the action
-      required: true,
+      required: false,
       index: true, // Indexed for fast queries by actor
     },
     action: { type: String, required: true, index: true }, // Action type (e.g., UPDATE_SHIFTPLAN, DELETE_WORKLOG)

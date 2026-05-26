@@ -1,7 +1,8 @@
 import ShiftPlan from "../models/ShiftPlan.js"; // Shift plan collection
 import LeaveRequest from "../models/LeaveRequest.js"; // Leave requests for conflict checks
 import { sendNotification } from "../utils/sendNotification.js"; // Notification helper
-import Audit from "../models/Audit.js"; // Audit logs for updates
+import { createAuditLog } from "../services/auditService.js"; // Central audit logger
+import { AUDIT_ACTIONS } from "../constants/auditActions.js"; // Audit action codes
 import Team from "../models/Team.js"; // Team data for access and capacity
 import User from "../models/User.js"; // User data for ownership checks
 import {
@@ -172,6 +173,25 @@ export const createShiftPlans = async (req, res) => {
 		}));
 
 		const createdPlans = await ShiftPlan.insertMany(payload); // Bulk insert
+
+		await Promise.all(
+			createdPlans.map((plan) =>
+				createAuditLog({
+					actorId: req.user._id,
+					action: AUDIT_ACTIONS.CREATE_SHIFTPLAN,
+					entity: "ShiftPlan",
+					entityId: plan._id,
+					after: {
+						userId: plan.userId,
+						date: plan.date,
+						plannedMode: plan.plannedMode,
+						plannedOffice: plan.plannedOffice,
+						notes: plan.notes,
+					},
+				})
+			)
+		);
+
 		return res.status(201).json({ plans: createdPlans });
 	} catch (error) {
 		return res.status(500).json({ message: error.message || "Failed to create plans" });
@@ -269,13 +289,26 @@ export const updateShiftPlan = async (req, res) => {
 
 		const updated = await ShiftPlan.findByIdAndUpdate(plan._id, { $set: updates }, { new: true }); // Save
 
-		await Audit.create({
+		await createAuditLog({
 			actorId: req.user._id,
-			action: "UPDATE_SHIFT_PLAN",
+			action: AUDIT_ACTIONS.UPDATE_SHIFTPLAN,
 			entity: "ShiftPlan",
 			entityId: plan._id,
-			before: plan.toObject(), // Snapshot before update
-			after: updated.toObject(), // Snapshot after update
+			before: {
+				plannedMode: plan.plannedMode,
+				plannedOffice: plan.plannedOffice,
+				notes: plan.notes,
+			},
+			after: {
+				plannedMode: updated.plannedMode,
+				plannedOffice: updated.plannedOffice,
+				notes: updated.notes,
+			},
+			reason: req.body?.reason || "",
+			metadata: {
+				userId: updated.userId,
+				date: updated.date,
+			},
 		});
 
 		return res.status(200).json({ plan: updated });
@@ -355,6 +388,25 @@ export const deleteShiftPlan = async (req, res) => {
 		}
 
 		await ShiftPlan.deleteOne({ _id: plan._id }); // Remove plan
+
+		await createAuditLog({
+			actorId: req.user._id,
+			action: AUDIT_ACTIONS.DELETE_SHIFTPLAN,
+			entity: "ShiftPlan",
+			entityId: plan._id,
+			before: {
+				userId: plan.userId,
+				date: plan.date,
+				plannedMode: plan.plannedMode,
+				plannedOffice: plan.plannedOffice,
+				notes: plan.notes,
+			},
+			reason: req.body?.reason || "",
+			metadata: {
+				userId: plan.userId,
+				date: plan.date,
+			},
+		});
 		return res.status(200).json({ message: "Shift plan deleted" });
 	} catch (error) {
 		return res.status(500).json({ message: error.message || "Failed to delete shift plan" });

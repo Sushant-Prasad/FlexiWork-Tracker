@@ -4,6 +4,8 @@ import { canApplyLeave, canApproveLeave } from "../utils/leavePermissions.js"; /
 import { isValidLeaveTransition } from "../utils/leaveStatusFlow.js"; // Status transitions
 import { validateLeaveRequest } from "../utils/leaveValidation.js"; // Leave validation
 import { sendNotification } from "../utils/sendNotification.js"; // Notification helper
+import { createAuditLog } from "../services/auditService.js"; // Central audit logger
+import { AUDIT_ACTIONS } from "../constants/auditActions.js"; // Audit action codes
 
 // POST /api/leaves - employee applies for leave
 export const createLeaveRequest = async (req, res) => {
@@ -126,6 +128,24 @@ export const approveLeave = async (req, res) => {
 			relatedId: leave._id,
 		});
 
+		await createAuditLog({
+			actorId: req.user._id,
+			action: AUDIT_ACTIONS.APPROVE_LEAVE,
+			entity: "LeaveRequest",
+			entityId: leave._id,
+			before: {
+				status: "PENDING",
+			},
+			after: {
+				status: "APPROVED",
+			},
+			reason: req.body?.reason || "",
+			metadata: {
+				userId: leave.userId,
+				dateRange: { startDate: leave.startDate, endDate: leave.endDate },
+			},
+		});
+
 		return res.status(200).json({ success: true, message: "Leave approved", data: leave });
 	} catch (error) {
 		return res
@@ -168,6 +188,24 @@ export const rejectLeave = async (req, res) => {
 			message: `Your leave request from ${leave.startDate} to ${leave.endDate} was rejected.`,
 			type: "LEAVE_REJECTED",
 			relatedId: leave._id,
+		});
+
+		await createAuditLog({
+			actorId: req.user._id,
+			action: AUDIT_ACTIONS.REJECT_LEAVE,
+			entity: "LeaveRequest",
+			entityId: leave._id,
+			before: {
+				status: "PENDING",
+			},
+			after: {
+				status: "REJECTED",
+			},
+			reason: req.body?.reason || "",
+			metadata: {
+				userId: leave.userId,
+				dateRange: { startDate: leave.startDate, endDate: leave.endDate },
+			},
 		});
 
 		return res.status(200).json({ success: true, message: "Leave rejected", data: leave });

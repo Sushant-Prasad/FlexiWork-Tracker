@@ -1,6 +1,8 @@
 import WorkLog from "../models/WorkLog.js"; // Work log model
 import { getEditableUntil, getTodayDate } from "../utils/dateUtils.js"; // Date helpers
 import { calculateWorkedHours } from "../utils/calculateWorkedHours.js"; // Hours calculator
+import { createAuditLog } from "../services/auditService.js"; // Central audit logger
+import { AUDIT_ACTIONS } from "../constants/auditActions.js"; // Audit action codes
 
 // Create or update today's work log for the logged-in user
 export const createOrUpdateWorkLog = async (req, res) => {
@@ -20,6 +22,14 @@ export const createOrUpdateWorkLog = async (req, res) => {
 				return res.status(403).json({ success: false, message: "Edit window closed" });
 			}
 
+			const beforeSnapshot = {
+				actualMode: existingLog.actualMode,
+				checkInAt: existingLog.checkInAt,
+				checkOutAt: existingLog.checkOutAt,
+				comments: existingLog.comments,
+				workedHours: existingLog.workedHours,
+			};
+
 			if (actualMode !== undefined) existingLog.actualMode = actualMode; // Update mode if provided
 			if (comments !== undefined) existingLog.comments = comments; // Update comments if provided
 			if (checkInAt !== undefined) existingLog.checkInAt = checkInAt; // Update check-in time
@@ -35,6 +45,24 @@ export const createOrUpdateWorkLog = async (req, res) => {
 			); // Recalculate worked hours
 
 			await existingLog.save(); // Persist updates
+
+			await createAuditLog({
+				actorId: user._id,
+				action: AUDIT_ACTIONS.UPDATE_WORKLOG,
+				entity: "WorkLog",
+				entityId: existingLog._id,
+				before: beforeSnapshot,
+				after: {
+					actualMode: existingLog.actualMode,
+					checkInAt: existingLog.checkInAt,
+					checkOutAt: existingLog.checkOutAt,
+					comments: existingLog.comments,
+					workedHours: existingLog.workedHours,
+				},
+				metadata: {
+					date: existingLog.date,
+				},
+			});
 
 			return res.status(200).json({
 				success: true,
@@ -60,6 +88,23 @@ export const createOrUpdateWorkLog = async (req, res) => {
 		newLog.workedHours = calculateWorkedHours(newLog.checkInAt, newLog.checkOutAt); // Calculate hours
 
 		await newLog.save(); // Create new log
+
+		await createAuditLog({
+			actorId: user._id,
+			action: AUDIT_ACTIONS.CREATE_WORKLOG,
+			entity: "WorkLog",
+			entityId: newLog._id,
+			after: {
+				actualMode: newLog.actualMode,
+				checkInAt: newLog.checkInAt,
+				checkOutAt: newLog.checkOutAt,
+				comments: newLog.comments,
+				workedHours: newLog.workedHours,
+			},
+			metadata: {
+				date: newLog.date,
+			},
+		});
 
 		return res.status(201).json({
 			success: true,
@@ -96,12 +141,33 @@ export const updateWorkLog = async (req, res) => {
 		}
 
 		const { checkOutAt, comments } = req.body || {};
+		const beforeSnapshot = {
+			checkOutAt: log.checkOutAt,
+			comments: log.comments,
+			workedHours: log.workedHours,
+		};
 		if (checkOutAt !== undefined) log.checkOutAt = checkOutAt; // Update checkout time
 		if (comments !== undefined) log.comments = comments; // Update comments
 
 		log.workedHours = calculateWorkedHours(log.checkInAt, log.checkOutAt); // Recalculate hours
 
 		await log.save(); // Save updates
+
+		await createAuditLog({
+			actorId: user._id,
+			action: AUDIT_ACTIONS.UPDATE_WORKLOG,
+			entity: "WorkLog",
+			entityId: log._id,
+			before: beforeSnapshot,
+			after: {
+				checkOutAt: log.checkOutAt,
+				comments: log.comments,
+				workedHours: log.workedHours,
+			},
+			metadata: {
+				date: log.date,
+			},
+		});
 
 		return res.status(200).json({
 			success: true,

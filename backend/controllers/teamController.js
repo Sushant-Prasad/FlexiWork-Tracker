@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 import Team from "../models/Team.js";
 import User from "../models/User.js";
+import { createAuditLog } from "../services/auditService.js"; // Central audit logger
+import { AUDIT_ACTIONS } from "../constants/auditActions.js"; // Audit action codes
 
 /*
 Team Controller
@@ -203,6 +205,20 @@ export const addMembers = async (req, res) => {
 
 		await session.commitTransaction();
 		const updated = await Team.findById(team._id);
+
+		await createAuditLog({
+			actorId: req.user._id,
+			action: AUDIT_ACTIONS.ADD_TEAM_MEMBER,
+			entity: "Team",
+			entityId: team._id,
+			after: {
+				addedUserIds: memberIds,
+			},
+			metadata: {
+				teamName: team.name,
+			},
+		});
+
 		return res.status(200).json({ team: updated });
 	} catch (error) {
 		await session.abortTransaction();
@@ -247,6 +263,20 @@ export const removeMember = async (req, res) => {
 
 		await session.commitTransaction();
 		const updated = await Team.findById(team._id);
+
+		await createAuditLog({
+			actorId: req.user._id,
+			action: AUDIT_ACTIONS.REMOVE_TEAM_MEMBER,
+			entity: "Team",
+			entityId: team._id,
+			after: {
+				removedUserId: userId,
+			},
+			metadata: {
+				teamName: team.name,
+			},
+		});
+
 		return res.status(200).json({ team: updated });
 	} catch (error) {
 		await session.abortTransaction();

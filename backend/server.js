@@ -14,6 +14,7 @@ import projectRoutes from "./routes/projectRoutes.js"; // Project routes
 import taskRoutes from "./routes/taskRoutes.js"; // Task routes
 import leaveRoutes from "./routes/leaveRoutes.js"; // Leave routes
 import notificationRoutes from "./routes/notificationRoutes.js"; // Notification routes
+import auditRoutes from "./routes/auditRoutes.js"; // Audit routes
 dotenv.config();
 
 
@@ -60,6 +61,9 @@ app.use("/api/leaves", leaveRoutes);
 
 // Notification APIs
 app.use("/api/notifications", notificationRoutes);
+
+// Audit APIs
+app.use("/api/audits", auditRoutes);
 
 
 // Start server

@@ -3,6 +3,8 @@ import WorkLog from "../models/WorkLog.js"; // Work log model
 import User from "../models/User.js"; // User model
 import { sendNotification } from "../utils/sendNotification.js"; // Notification helper
 import { getEditableUntil, getTodayDate } from "../utils/dateUtils.js"; // Date helpers
+import { createAuditLog } from "../services/auditService.js"; // Central audit logger
+import { AUDIT_ACTIONS } from "../constants/auditActions.js"; // Audit action codes
 
 /*
 Nightly WorkLog Check
@@ -19,12 +21,26 @@ cron.schedule("15 22 * * *", async () => {
 			const log = await WorkLog.findOne({ userId: user._id, date: today }); // Check today's log
 
 			if (!log) {
-				await WorkLog.create({
+				const newLog = await WorkLog.create({
 					userId: user._id,
 					date: today,
 					actualMode: "UNLOGGED", // Mark missing log
 					editableUntil: getEditableUntil(), // Today's cutoff
 					source: "AUTO", // Created by system
+				});
+
+				await createAuditLog({
+					actorId: null,
+					action: AUDIT_ACTIONS.AUTO_MARK_UNLOGGED,
+					entity: "WorkLog",
+					entityId: newLog._id,
+					after: {
+						actualMode: newLog.actualMode,
+					},
+					metadata: {
+						date: newLog.date,
+						job: "nightlyWorkLogCheck",
+					},
 				});
 
 				await sendNotification({
