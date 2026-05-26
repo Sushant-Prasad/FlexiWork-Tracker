@@ -5,6 +5,7 @@ import { Eye, EyeOff, Lock, Mail } from "lucide-react";
 import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthContext.jsx";
 import { getRoleDefaultPath } from "../constants/navigation.js";
+import { Button } from "../components/ui/button.jsx";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -161,15 +162,15 @@ const Login = () => {
           </div>
 
           {/* Button */}
-          <button
+          <Button
             type="submit"
             disabled={loading}
-            className="w-full rounded-2xl bg-primary py-4 font-semibold text-primary-foreground transition hover:bg-primary/90"
+            className="w-full rounded-2xl"
           >
             {loading
               ? "Logging in..."
               : "Login"}
-          </button>
+          </Button>
 
         </form>
 

@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   Users,
@@ -8,6 +8,14 @@ import {
   BarChart3,
   CheckCircle2,
 } from "lucide-react";
+import { Button } from "../components/ui/button.jsx";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card.jsx";
 
 const features = [
   {
@@ -49,6 +57,8 @@ const features = [
 ];
 
 const Home = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       
@@ -80,19 +90,22 @@ const Home = () => {
             </p>
 
             <div className="mt-10 flex flex-wrap gap-4">
-              <Link
-                to="/login"
-                className="rounded-xl bg-primary px-6 py-3 font-medium text-primary-foreground transition hover:bg-primary/90"
+              <Button
+                size="lg"
+                className="rounded-xl"
+                onClick={() => navigate("/login")}
               >
                 Get Started
-              </Link>
+              </Button>
 
-              <Link
-                to="/about"
-                className="rounded-xl border border-border px-6 py-3 font-medium transition hover:bg-muted"
+              <Button
+                size="lg"
+                variant="outline"
+                className="rounded-xl"
+                onClick={() => navigate("/about")}
               >
                 Learn More
-              </Link>
+              </Button>
             </div>
           </motion.div>
 
@@ -138,19 +151,21 @@ const Home = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="rounded-3xl border border-border bg-card p-8 transition hover:border-primary/30 hover:shadow-xl"
+                className="transition hover:shadow-xl"
               >
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-secondary text-primary">
-                  <Icon size={28} />
-                </div>
-
-                <h3 className="mt-6 text-2xl font-semibold">
-                  {feature.title}
-                </h3>
-
-                <p className="mt-4 text-muted-foreground leading-relaxed">
-                  {feature.description}
-                </p>
+                <Card className="h-full rounded-3xl border-border bg-card/90">
+                  <CardHeader>
+                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-secondary text-primary">
+                      <Icon size={28} />
+                    </div>
+                    <CardTitle className="text-2xl">
+                      {feature.title}
+                    </CardTitle>
+                    <CardDescription className="leading-relaxed">
+                      {feature.description}
+                    </CardDescription>
+                  </CardHeader>
+                </Card>
               </motion.div>
             );
           })}
@@ -210,12 +225,13 @@ const Home = () => {
           </p>
 
           <div className="mt-8">
-            <Link
-              to="/register"
-              className="rounded-xl bg-primary px-8 py-4 text-lg font-medium text-primary-foreground transition hover:bg-primary/90"
+            <Button
+              size="lg"
+              className="rounded-xl"
+              onClick={() => navigate("/register")}
             >
               Start Now
-            </Link>
+            </Button>
           </div>
         </motion.div>
       </section>
