@@ -6,6 +6,7 @@ import validateMiddleware from "../middleware/validateMiddleware.js"; // Request
 import {
   getAdherence,
   getExceptions,
+  getAttendanceSummary,
 } from "../controllers/attendanceController.js";
 
 /*
@@ -39,6 +40,14 @@ attendanceRoutes.get(
   dateValidators, // Validate query
   validateMiddleware, // Return 400 on validation errors
   getExceptions // Filter exceptions
+);
+
+// GET /api/attendance/summary - employee attendance metrics
+attendanceRoutes.get(
+  "/summary",
+  authMiddleware,
+  roleMiddleware("EMPLOYEE"),
+  getAttendanceSummary
 );
 
 export default attendanceRoutes;

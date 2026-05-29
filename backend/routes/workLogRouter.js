@@ -4,6 +4,7 @@ import authMiddleware from "../middleware/authMiddleware.js"; // Auth protection
 import validateMiddleware from "../middleware/validateMiddleware.js"; // Request validation
 import {
 	createOrUpdateWorkLog,
+	getTodayWorkLog,
 	getMyWorkLogs,
 	updateWorkLog,
 } from "../controllers/workLogController.js";
@@ -67,6 +68,13 @@ workLogRouter.get(
 	listValidators, // Validate pagination query
 	validateMiddleware, // Return 400 on validation errors
 	getMyWorkLogs // Fetch user history
+);
+
+// GET /api/worklogs/today - today's work log for the logged-in user
+workLogRouter.get(
+	"/today",
+	authMiddleware, // Require authenticated user
+	getTodayWorkLog
 );
 
 export default workLogRouter;

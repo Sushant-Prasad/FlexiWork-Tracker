@@ -83,3 +83,72 @@ export const getExceptions = async (req, res) => {
 			.json({ success: false, message: error.message || "Failed to fetch exceptions" });
 	}
 };
+
+// GET /api/attendance/summary - monthly summary for the logged-in user
+export const getAttendanceSummary = async (req, res) => {
+	try {
+		const user = req.user; // Authenticated user
+		if (!user) {
+			return res.status(401).json({ success: false, message: "Unauthorized" });
+		}
+
+		const today = new Date();
+		const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+		const monthEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+
+		const startDate = monthStart.toISOString().split("T")[0];
+		const endDate = monthEnd.toISOString().split("T")[0];
+
+		const logs = await WorkLog.find({
+			userId: user._id,
+			date: { $gte: startDate, $lte: endDate },
+		}).sort({ date: -1 });
+
+		const presentModes = new Set(["REMOTE", "OFFICE", "HYBRID"]);
+		const presentDays = logs.filter((log) => presentModes.has(log.actualMode)).length;
+		const officeDays = logs.filter((log) => log.actualMode === "OFFICE").length;
+		const remoteDays = logs.filter((log) => log.actualMode === "REMOTE").length;
+		const hybridDays = logs.filter((log) => log.actualMode === "HYBRID").length;
+		const deviations = logs.filter((log) =>
+			["ABSENT", "UNLOGGED"].includes(log.actualMode)
+		).length;
+
+		const totalDays = logs.length;
+		const attendancePercentage = totalDays
+			? Math.round((presentDays / totalDays) * 100)
+			: 0;
+
+		const logMap = new Map(logs.map((log) => [log.date, log]));
+		let streak = 0;
+		let cursor = new Date();
+
+		for (let i = 0; i < 31; i += 1) {
+			const dateKey = cursor.toISOString().split("T")[0];
+			const log = logMap.get(dateKey);
+			if (log && presentModes.has(log.actualMode)) {
+				streak += 1;
+				cursor.setDate(cursor.getDate() - 1);
+			} else {
+				break;
+			}
+		}
+
+		return res.status(200).json({
+			success: true,
+			data: {
+				attendancePercentage,
+				presentDays,
+				streak,
+				deviations,
+				officeDays,
+				remoteDays,
+				hybridDays,
+			},
+		});
+	} catch (error) {
+		return res.status(500).json({
+			success: false,
+			message: error.message || "Failed to fetch attendance summary",
+		});
+	}
+};

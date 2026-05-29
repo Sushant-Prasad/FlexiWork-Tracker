@@ -211,3 +211,34 @@ export const getMyWorkLogs = async (req, res) => {
 		});
 	}
 };
+
+// Get today's work log for the logged-in user
+export const getTodayWorkLog = async (req, res) => {
+	try {
+		const user = req.user; // Authenticated user
+		if (!user) {
+			return res.status(401).json({ success: false, message: "Unauthorized" });
+		}
+
+		const today = getTodayDate();
+		const log = await WorkLog.findOne({ userId: user._id, date: today });
+
+		return res.status(200).json({
+			success: true,
+			data: {
+				log: log || {
+					date: today,
+					actualMode: "UNLOGGED",
+					checkInAt: null,
+					checkOutAt: null,
+					workedHours: 0,
+				},
+			},
+		});
+	} catch (error) {
+		return res.status(500).json({
+			success: false,
+			message: error.message || "Failed to fetch today's work log",
+		});
+	}
+};

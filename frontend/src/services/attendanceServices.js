@@ -170,3 +170,78 @@ export const getExceptionsReport = async (params, token) => {
     throw new Error(getErrorMessage(error, "Failed to fetch exceptions report"));
   }
 };
+
+/*
+==================================================
+GET ATTENDANCE SUMMARY
+--------------------------------------------------
+API:
+GET /api/attendance/summary
+
+Access:
+EMPLOYEE
+
+Purpose:
+Returns employee attendance metrics.
+
+Used In:
+Employee Attendance Dashboard
+==================================================
+*/
+export const getAttendanceSummary = async (token) => {
+  try {
+    const response = await api.get("/attendance/summary", withAuth(token));
+    return response.data;
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "Failed to fetch attendance summary"));
+  }
+};
+
+/*
+==================================================
+GET TODAY ATTENDANCE
+--------------------------------------------------
+API:
+GET /api/worklogs/today
+
+Access:
+EMPLOYEE
+
+Purpose:
+Returns today's attendance log.
+==================================================
+*/
+export const getTodayAttendance = async (token) => {
+  try {
+    const response = await api.get("/worklogs/today", withAuth(token));
+    return response.data;
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "Failed to fetch today's attendance"));
+  }
+};
+
+/*
+==================================================
+GET ATTENDANCE HISTORY
+--------------------------------------------------
+API:
+GET /api/worklogs/me
+
+Access:
+EMPLOYEE
+
+Purpose:
+Returns attendance history.
+==================================================
+*/
+export const getAttendanceHistory = async (params, token) => {
+  try {
+    const response = await api.get("/worklogs/me", {
+      ...withAuth(token),
+      params,
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "Failed to fetch attendance history"));
+  }
+};
