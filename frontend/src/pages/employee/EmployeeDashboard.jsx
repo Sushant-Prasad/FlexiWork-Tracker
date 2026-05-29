@@ -102,7 +102,10 @@ const EmployeeDashboard = () => {
 
   const taskCompletion = [
     { name: "Assigned", value: dashboard.assignedTasks || 0 },
-    { name: "Completed", value: Math.max((dashboard.assignedTasks || 0) - 2, 0) },
+    {
+      name: "Completed",
+      value: Math.max((dashboard.assignedTasks || 0) - 2, 0),
+    },
   ];
 
   const pieColors = ["#245BA7", "#3B82F6", "#93C5FD"];
@@ -112,7 +115,7 @@ const EmployeeDashboard = () => {
       <FadeIn>
         <div className="rounded-[28px] border border-border bg-gradient-to-r from-white via-[#EFF6FF] to-white p-8 shadow-[0_10px_30px_rgba(36,91,167,0.12)]">
           <p className="text-sm font-semibold uppercase tracking-[0.2em] text-primary">
-            Welcome Back f44b
+            Welcome Back
           </p>
           <h1 className="mt-3 text-3xl font-bold text-foreground">
             Track attendance, productivity and team performance.
@@ -250,7 +253,10 @@ const EmployeeDashboard = () => {
                     paddingAngle={4}
                   >
                     {workModeSplit.map((entry, index) => (
-                      <Cell key={entry.name} fill={pieColors[index % pieColors.length]} />
+                      <Cell
+                        key={entry.name}
+                        fill={pieColors[index % pieColors.length]}
+                      />
                     ))}
                   </Pie>
                 </PieChart>
@@ -273,6 +279,7 @@ const EmployeeDashboard = () => {
           </div>
         </div>
       </FadeIn>
+
     </div>
   );
 };
