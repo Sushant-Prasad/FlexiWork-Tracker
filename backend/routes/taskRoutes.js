@@ -6,6 +6,9 @@ import validateMiddleware from "../middleware/validateMiddleware.js"; // Request
 import {
   createTask,
   deleteTask,
+  getTaskActivity,
+  getTaskAnalytics,
+  getTaskById,
   getMyTasks,
   getProjectTasks,
   updateTask,
@@ -50,6 +53,10 @@ const updateValidators = [
   body("dueDate").optional().isString(),
 ];
 
+const taskIdValidator = [
+  param("id").isMongoId().withMessage("Task id must be valid"),
+];
+
 // POST /api/tasks - manager creates task
 taskRoutes.post(
   "/",
@@ -65,6 +72,22 @@ taskRoutes.get(
   "/me",
   authMiddleware, // Require authenticated user
   getMyTasks // Fetch assigned tasks
+);
+
+// GET /api/tasks/analytics - employee task analytics
+taskRoutes.get(
+  "/analytics",
+  authMiddleware, // Require authenticated user
+  roleMiddleware("EMPLOYEE"),
+  getTaskAnalytics
+);
+
+// GET /api/tasks/activity - employee recent activity
+taskRoutes.get(
+  "/activity",
+  authMiddleware, // Require authenticated user
+  roleMiddleware("EMPLOYEE"),
+  getTaskActivity
 );
 
 // GET /api/tasks/project/:projectId - project tasks
@@ -83,11 +106,21 @@ taskRoutes.patch(
   updateTask // Update task
 );
 
+// GET /api/tasks/:id - task details
+taskRoutes.get(
+  "/:id",
+  authMiddleware, // Require authenticated user
+  taskIdValidator,
+  validateMiddleware,
+  getTaskById
+);
+
 // DELETE /api/tasks/:id - delete task
 taskRoutes.delete(
   "/:id",
   authMiddleware, // Require authenticated user
   roleMiddleware("MANAGER", "SYSTEM_ADMIN"), // Only managers/admins can delete
+  taskIdValidator,
   validateMiddleware, // Return 400 on validation errors
   deleteTask // Delete task
 );

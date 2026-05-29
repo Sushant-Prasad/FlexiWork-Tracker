@@ -1,6 +1,12 @@
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getMyTasks, updateTask } from "../../services/taskServices.js";
+import {
+  getMyTasks,
+  getTaskActivity,
+  getTaskAnalytics,
+  getTaskById,
+  updateTask,
+} from "../../services/taskServices.js";
 import TaskActivity from "../../components/tasks/TaskActivity.jsx";
 import TaskDetailsModal from "../../components/tasks/TaskDetailsModal.jsx";
 import TaskFilters from "../../components/tasks/TaskFilters.jsx";
@@ -19,27 +25,34 @@ const STATUS_LABELS = {
   CHANGES_REQUESTED: "Reopened",
 };
 
-const getAllowedUpdates = (status) => {
-  if (status === "TODO") return ["IN_PROGRESS"];
-  if (status === "IN_PROGRESS") return ["TESTING"];
-  if (status === "TESTING") return ["READY_FOR_REVIEW"];
-  return [];
-};
-
 const normalizeTask = (task) => {
   return {
     id: task._id || task.id,
     title: task.title || "Untitled Task",
     description: task.description || "",
-    projectName: task.project?.title || task.projectName || "",
+    projectName: task.projectId?.title || task.project?.title || task.projectName || "",
     priority: task.priority || "MEDIUM",
     status: task.status || "TODO",
     statusLabel: STATUS_LABELS[task.status] || task.status,
-    dueDate: task.dueDate || "",
+    dueDate: task.dueDate ? new Date(task.dueDate).toLocaleDateString() : "",
     assignedByName: task.assignedBy?.name || task.assignedByName || "Manager",
     assignedDate: task.createdAt ? new Date(task.createdAt).toLocaleDateString() : "",
     notes: task.notes || "",
-    allowedStatusUpdates: getAllowedUpdates(task.status),
+    allowedStatusUpdates: task.allowedStatusUpdates || [],
+  };
+};
+
+const normalizeActivity = (activity) => {
+  const actionLabel =
+    activity.action === "TASK_ASSIGNED"
+      ? "Assigned"
+      : activity.action === "STATUS_UPDATED"
+        ? "Status updated"
+        : activity.action?.replace(/_/g, " ") || "Activity";
+
+  return {
+    id: activity.id || `${activity.task}-${activity.createdAt}`,
+    label: `${actionLabel}: ${activity.task}`,
   };
 };
 
@@ -57,39 +70,89 @@ const MyTasks = () => {
     },
   });
 
+  const {
+    data: analyticsData,
+    isLoading: isAnalyticsLoading,
+    refetch: refetchAnalytics,
+  } = useQuery({
+    queryKey: ["employee-task-analytics"],
+    queryFn: async () => {
+      const token = localStorage.getItem(TOKEN_KEY);
+      if (!token) throw new Error("Authentication token missing.");
+      return getTaskAnalytics(token);
+    },
+  });
+
+  const {
+    data: activityData,
+    isLoading: isActivityLoading,
+    refetch: refetchActivity,
+  } = useQuery({
+    queryKey: ["employee-task-activity"],
+    queryFn: async () => {
+      const token = localStorage.getItem(TOKEN_KEY);
+      if (!token) throw new Error("Authentication token missing.");
+      return getTaskActivity(token);
+    },
+  });
+
+  const { data: taskDetailsData, isFetching: isTaskDetailsLoading } = useQuery({
+    queryKey: ["employee-task-details", activeTask?.id],
+    enabled: Boolean(activeTask?.id),
+    queryFn: async () => {
+      const token = localStorage.getItem(TOKEN_KEY);
+      if (!token) throw new Error("Authentication token missing.");
+      return getTaskById(activeTask.id, token);
+    },
+  });
+
   const tasks = useMemo(() => {
     const list = data?.data || data?.tasks || data || [];
     return list.map(normalizeTask);
   }, [data]);
 
-  const stats = useMemo(() => {
+  const fallbackAnalytics = useMemo(() => {
     const total = tasks.length;
-    const pending = tasks.filter((task) => task.status === "TODO").length;
-    const inProgress = tasks.filter((task) => task.status === "IN_PROGRESS").length;
-    const completed = tasks.filter((task) => task.status === "DONE").length;
+    const done = tasks.filter((task) => task.status === "DONE").length;
 
+    return {
+      assigned: total,
+      todo: tasks.filter((task) => task.status === "TODO").length,
+      inProgress: tasks.filter((task) => task.status === "IN_PROGRESS").length,
+      testing: tasks.filter((task) => task.status === "TESTING").length,
+      review: tasks.filter((task) => task.status === "READY_FOR_REVIEW").length,
+      done,
+      completionRate: total === 0 ? 0 : Math.round((done / total) * 100),
+    };
+  }, [tasks]);
+
+  const analytics = analyticsData?.data || fallbackAnalytics;
+
+  const stats = useMemo(() => {
     return [
-      { label: "Assigned Tasks", value: total },
-      { label: "Pending Tasks", value: pending },
-      { label: "In Progress", value: inProgress },
-      { label: "Completed Tasks", value: completed },
+      { label: "Assigned Tasks", value: analytics.assigned },
+      { label: "Pending Tasks", value: analytics.todo },
+      { label: "In Progress", value: analytics.inProgress },
+      { label: "Completed Tasks", value: analytics.done },
     ];
-  }, [tasks]);
+  }, [analytics]);
 
-  const progressPercent = useMemo(() => {
-    if (tasks.length === 0) return 0;
-    const completed = tasks.filter((task) => task.status === "DONE").length;
-    return Math.round((completed / tasks.length) * 100);
-  }, [tasks]);
+  const progressPercent = analytics.completionRate || 0;
 
   const activityItems = useMemo(() => {
-    return tasks
-      .slice(0, 3)
-      .map((task) => ({
-        id: task.id,
-        label: `${task.title} • ${task.statusLabel}`,
-      }));
-  }, [tasks]);
+    const activity = activityData?.data || [];
+    if (activity.length > 0) return activity.map(normalizeActivity);
+
+    return tasks.slice(0, 3).map((task) => ({
+      id: task.id,
+      label: `${task.title} - ${task.statusLabel}`,
+    }));
+  }, [activityData, tasks]);
+
+  const detailedTask = useMemo(() => {
+    const detail = taskDetailsData?.data;
+    return detail ? normalizeTask(detail) : activeTask;
+  }, [activeTask, taskDetailsData]);
 
   const filteredTasks = useMemo(() => {
     return tasks.filter((task) => {
@@ -110,6 +173,8 @@ const MyTasks = () => {
     await updateTask(task.id, { status: nextStatus }, token);
     setActiveTask(null);
     refetch();
+    refetchAnalytics();
+    refetchActivity();
   };
 
   return (
@@ -131,7 +196,7 @@ const MyTasks = () => {
         </div>
       ) : (
         <>
-          <TaskStats stats={stats} />
+          <TaskStats stats={stats} isLoading={isAnalyticsLoading && tasks.length === 0} />
 
           <div className="rounded-2xl border border-border bg-card p-6">
             <TaskFilters
@@ -146,13 +211,17 @@ const MyTasks = () => {
 
           <div className="grid gap-6 lg:grid-cols-2">
             <TaskProgress percent={progressPercent} />
-            <TaskActivity items={activityItems} />
+            <TaskActivity
+              items={activityItems}
+              isLoading={isActivityLoading && tasks.length === 0}
+            />
           </div>
         </>
       )}
 
       <TaskDetailsModal
-        task={activeTask}
+        task={detailedTask}
+        isLoading={isTaskDetailsLoading}
         onClose={() => setActiveTask(null)}
         onUpdateStatus={handleUpdateStatus}
       />

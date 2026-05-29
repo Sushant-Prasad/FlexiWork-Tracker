@@ -1,7 +1,7 @@
-const STATUS_OPTIONS = ["TODO", "IN_PROGRESS", "TESTING", "READY_FOR_REVIEW"];
-
-const TaskDetailsModal = ({ task, onClose, onUpdateStatus }) => {
+const TaskDetailsModal = ({ task, isLoading = false, onClose, onUpdateStatus }) => {
   if (!task) return null;
+
+  const statusOptions = [task.status, ...(task.allowedStatusUpdates || [])].filter(Boolean);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
@@ -58,7 +58,7 @@ const TaskDetailsModal = ({ task, onClose, onUpdateStatus }) => {
             Description
           </p>
           <p className="mt-2 text-sm text-foreground">
-            {task.description || "No description provided."}
+            {isLoading ? "Loading task details..." : task.description || "No description provided."}
           </p>
         </div>
 
@@ -72,7 +72,7 @@ const TaskDetailsModal = ({ task, onClose, onUpdateStatus }) => {
         </div>
 
         <div className="mt-6 flex flex-wrap items-center gap-3">
-          {STATUS_OPTIONS.map((status) => (
+          {statusOptions.map((status) => (
             <button
               key={status}
               type="button"
@@ -82,7 +82,7 @@ const TaskDetailsModal = ({ task, onClose, onUpdateStatus }) => {
                   ? "border-primary bg-primary text-white"
                   : "border-border bg-white text-foreground"
               }`}
-              disabled={!task.allowedStatusUpdates.includes(status)}
+              disabled={isLoading || !task.allowedStatusUpdates.includes(status)}
             >
               {status.replace(/_/g, " ")}
             </button>

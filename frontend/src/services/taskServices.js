@@ -173,6 +173,75 @@ export const getMyTasks = async (token) => {
 
 /*
 ==================================================
+GET TASK ANALYTICS
+--------------------------------------------------
+API:
+GET /api/tasks/analytics
+
+Access:
+EMPLOYEE
+
+Purpose:
+Returns summarized task metrics for dashboards.
+==================================================
+*/
+export const getTaskAnalytics = async (token) => {
+  try {
+    const response = await api.get("/tasks/analytics", withAuth(token));
+    return response.data;
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "Failed to fetch task analytics"));
+  }
+};
+
+/*
+==================================================
+GET TASK ACTIVITY
+--------------------------------------------------
+API:
+GET /api/tasks/activity
+
+Access:
+EMPLOYEE
+
+Purpose:
+Returns recent task activity for the logged-in user.
+==================================================
+*/
+export const getTaskActivity = async (token) => {
+  try {
+    const response = await api.get("/tasks/activity", withAuth(token));
+    return response.data;
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "Failed to fetch task activity"));
+  }
+};
+
+/*
+==================================================
+GET TASK DETAILS
+--------------------------------------------------
+API:
+GET /api/tasks/:id
+
+Access:
+Authenticated users
+
+Purpose:
+Fetches details for a specific task.
+==================================================
+*/
+export const getTaskById = async (taskId, token) => {
+  try {
+    const response = await api.get(`/tasks/${taskId}`, withAuth(token));
+    return response.data;
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "Failed to fetch task details"));
+  }
+};
+
+/*
+==================================================
 GET PROJECT TASKS
 --------------------------------------------------
 API:

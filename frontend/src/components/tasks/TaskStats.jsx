@@ -1,4 +1,4 @@
-const TaskStats = ({ stats }) => {
+const TaskStats = ({ stats, isLoading = false }) => {
   return (
     <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
       {stats.map((item) => (
@@ -9,7 +9,9 @@ const TaskStats = ({ stats }) => {
           <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
             {item.label}
           </p>
-          <p className="mt-3 text-2xl font-semibold text-foreground">{item.value}</p>
+          <p className="mt-3 text-2xl font-semibold text-foreground">
+            {isLoading ? "..." : item.value}
+          </p>
         </div>
       ))}
     </div>
