@@ -11,6 +11,9 @@ import EmployeeTasks from './pages/employee/MyTasks.jsx'
 import EmployeeAttendance from './pages/employee/Attendance.jsx'
 import EmployeeLeaves from './pages/employee/MyLeaves.jsx'
 import EmployeeNotifications from './pages/employee/Notifications.jsx'
+import EmployeeWorkLogs from './pages/employee/MyWorkLogs.jsx'
+import EmployeeProfile from './pages/employee/Profile.jsx'
+import EmployeeTeamMembers from './pages/employee/TeamMembers.jsx'
 import ManagerDashboard from './pages/manager/Dashboard.jsx'
 import ManagerTeams from './pages/manager/Teams.jsx'
 import ManagerProjects from './pages/manager/Projects.jsx'
@@ -40,6 +43,9 @@ function App() {
             <Route path="/employee/attendance" element={<EmployeeAttendance />} />
             <Route path="/employee/leaves" element={<EmployeeLeaves />} />
             <Route path="/employee/notifications" element={<EmployeeNotifications />} />
+            <Route path="/employee/worklogs" element={<EmployeeWorkLogs />} />
+            <Route path="/employee/profile" element={<EmployeeProfile />} />
+            <Route path="/employee/team" element={<EmployeeTeamMembers />} />
           </Route>
 
           <Route element={<ProtectedRoute allowedRoles={["MANAGER"]} />}>
