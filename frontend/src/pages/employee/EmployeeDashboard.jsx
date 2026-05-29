@@ -30,49 +30,72 @@ const EmployeeDashboard = () => {
 
   const dashboard = data?.data || {};
 
-  const cards = [
+  const todayCards = [
     {
-      title: "Today's Mode",
+      title: "Today's Work Mode",
       value: dashboard.todayMode || "N/A",
       icon: CalendarDays,
     },
     {
-      title: "Worked Hours",
-      value: dashboard.workedHours || 0,
+      title: "Today's Shift",
+      value: dashboard.shiftWindow || "09:00 AM - 06:00 PM",
       icon: Clock,
     },
+    {
+      title: "Hours Worked Today",
+      value: `${dashboard.workedHours || 0} Hours`,
+      icon: Flame,
+    },
+    {
+      title: "Work Log Status",
+      value: dashboard.workLogStatus || "Pending",
+      icon: ClipboardList,
+    },
+  ];
+
+  const taskCards = [
+    {
+      title: "Assigned Tasks",
+      value: dashboard.assignedTasks || 0,
+      icon: ClipboardList,
+    },
+    {
+      title: "Pending Tasks",
+      value: dashboard.pendingTasks || 0,
+      icon: Clock,
+    },
+    {
+      title: "In Progress Tasks",
+      value: dashboard.inProgressTasks || 0,
+      icon: Flame,
+    },
+    {
+      title: "Completed Tasks",
+      value: dashboard.completedTasks || 0,
+      icon: CalendarDays,
+    },
+  ];
+
+  const attendanceCards = [
     {
       title: "Attendance Streak",
       value: `${dashboard.attendanceStreak || 0} Days`,
       icon: Flame,
     },
     {
-      title: "Assigned Tasks",
-      value: dashboard.assignedTasks || 0,
+      title: "Monthly Attendance",
+      value: `${dashboard.monthlyAttendancePct || 0}%`,
+      icon: CalendarDays,
+    },
+    {
+      title: "Office Days This Month",
+      value: `${dashboard.officeDaysMonth || 0} Days`,
+      icon: Clock,
+    },
+    {
+      title: "Remote Days This Month",
+      value: `${dashboard.remoteDaysMonth || 0} Days`,
       icon: ClipboardList,
-    },
-  ];
-
-  const stats = [
-    {
-      label: "Employees Online",
-      value: dashboard.todayMode && dashboard.todayMode !== "UNLOGGED" ? 1 : 0,
-      badge: "+12%",
-    },
-    {
-      label: "Pending Tasks",
-      value: dashboard.assignedTasks || 0,
-      badge: "-4%",
-    },
-    {
-      label: "Worked Hours",
-      value: dashboard.workedHours || 0,
-      badge: "+6%",
-    },
-    {
-      label: "Attendance %",
-      value: dashboard.todayMode && dashboard.todayMode !== "UNLOGGED" ? 100 : 0,
-      badge: "+3%",
     },
   ];
 
@@ -93,23 +116,29 @@ const EmployeeDashboard = () => {
     labels: ["Office", "Remote", "Hybrid"],
     datasets: [
       {
-        data: [3, 5, 2],
+        data: [
+          dashboard.officeDaysMonth || 3,
+          dashboard.remoteDaysMonth || 5,
+          dashboard.hybridDaysMonth || 2,
+        ],
         backgroundColor: ["#245BA7", "#3B82F6", "#93C5FD"],
         borderWidth: 0,
       },
     ],
   };
 
-  const taskCompletionData = {
-    labels: ["Assigned", "Completed"],
+  const taskProgressData = {
+    labels: ["Todo", "In Progress", "Review", "Done"],
     datasets: [
       {
         label: "Tasks",
         data: [
-          dashboard.assignedTasks || 0,
-          Math.max((dashboard.assignedTasks || 0) - 2, 0),
+          dashboard.todoTasks || 0,
+          dashboard.inProgressTasks || 0,
+          dashboard.reviewTasks || 0,
+          dashboard.completedTasks || 0,
         ],
-        backgroundColor: ["#245BA7", "#60A5FA"],
+        backgroundColor: ["#245BA7", "#3B82F6", "#60A5FA", "#93C5FD"],
       },
     ],
   };
@@ -132,114 +161,184 @@ const EmployeeDashboard = () => {
       </FadeIn>
 
       <FadeIn delay={0.1}>
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          {stats.map((item) => (
-            <div
-              key={item.label}
-              className="rounded-3xl border border-border bg-card p-5 shadow-[0_6px_16px_rgba(15,23,42,0.06)] card-hover"
-            >
-              <div className="flex items-center justify-between">
-                <p className="text-sm text-muted-foreground">{item.label}</p>
-                <span className="rounded-full bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary">
-                  {item.badge}
-                </span>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-foreground">
+              Today's Status
+            </h2>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            {todayCards.map((item) => (
+              <div
+                key={item.title}
+                className="rounded-3xl border border-primary/40 bg-primary p-5 text-white shadow-[0_10px_24px_rgba(36,91,167,0.25)] card-hover"
+              >
+                <div className="flex items-center justify-between">
+                  <p className="text-sm text-white/80">{item.title}</p>
+                  <span className="rounded-full bg-white/15 px-2.5 py-1 text-xs font-semibold text-white">
+                    Today
+                  </span>
+                </div>
+                <p className="mt-4 text-2xl font-semibold text-white">
+                  {item.value}
+                </p>
               </div>
-              <p className="mt-4 text-2xl font-semibold text-foreground">
-                {item.value}
-              </p>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </FadeIn>
 
       <FadeIn delay={0.2}>
-        <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
-          {cards.map((card) => {
-            const Icon = card.icon;
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-foreground">
+              Tasks & Productivity
+            </h2>
+          </div>
 
-            return (
-              <div
-                key={card.title}
-                className="rounded-3xl border border-border bg-card p-6 shadow-[0_6px_18px_rgba(15,23,42,0.08)] card-hover"
-              >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-muted-foreground">{card.title}</p>
+          <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+            {taskCards.map((card) => {
+              const Icon = card.icon;
 
-                    <h2 className="mt-3 text-3xl font-bold text-foreground">
-                      {card.value}
-                    </h2>
-                  </div>
+              return (
+                <div
+                  key={card.title}
+                  className="rounded-3xl border border-primary/40 bg-primary p-6 text-white shadow-[0_10px_24px_rgba(36,91,167,0.25)] card-hover"
+                >
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-white/80">{card.title}</p>
 
-                  <div className="rounded-2xl bg-primary/10 p-3 text-primary">
-                    <Icon size={24} />
+                      <h2 className="mt-3 text-3xl font-bold text-white">
+                        {card.value}
+                      </h2>
+                    </div>
+
+                    <div className="rounded-2xl bg-white/15 p-3 text-white">
+                      <Icon size={24} />
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       </FadeIn>
 
       <FadeIn delay={0.3}>
-        <div className="rounded-3xl border border-border bg-card p-6 shadow-[0_6px_18px_rgba(15,23,42,0.08)]">
+        <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold text-foreground">
-              Today's Summary
+            <h2 className="text-lg font-semibold text-foreground">
+              Attendance & Adherence
             </h2>
           </div>
 
-          <div className="mt-5 grid gap-4 sm:grid-cols-3">
-            <div className="rounded-2xl border border-border bg-secondary/40 p-4">
-              <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                Work Mode
-              </p>
-              <p className="mt-3 text-lg font-semibold text-foreground">
-                {dashboard.todayMode || "N/A"}
-              </p>
-            </div>
-            <div className="rounded-2xl border border-border bg-secondary/40 p-4">
-              <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                Hours
-              </p>
-              <p className="mt-3 text-lg font-semibold text-foreground">
-                {dashboard.workedHours || 0}
-              </p>
-            </div>
-            <div className="rounded-2xl border border-border bg-secondary/40 p-4">
-              <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                Tasks
-              </p>
-              <p className="mt-3 text-lg font-semibold text-foreground">
-                {dashboard.assignedTasks || 0}
-              </p>
-            </div>
+          <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+            {attendanceCards.map((card) => {
+              const Icon = card.icon;
+
+              return (
+                <div
+                  key={card.title}
+                  className="rounded-3xl border border-primary/40 bg-primary p-6 text-white shadow-[0_10px_24px_rgba(36,91,167,0.25)] card-hover"
+                >
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-white/80">{card.title}</p>
+                      <h2 className="mt-3 text-3xl font-bold text-white">
+                        {card.value}
+                      </h2>
+                    </div>
+                    <div className="rounded-2xl bg-white/15 p-3 text-white">
+                      <Icon size={24} />
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </FadeIn>
 
       <FadeIn delay={0.4}>
-        <div className="grid gap-6 xl:grid-cols-3">
-          <div className="rounded-3xl border border-border bg-card p-6 shadow-[0_6px_18px_rgba(15,23,42,0.08)]">
-            <h3 className="text-lg font-semibold text-foreground">
-              Attendance Trend
-            </h3>
-            <div className="mt-4 h-52">
-              <AttendanceChart data={attendanceTrendData} />
-            </div>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-foreground">Insights</h2>
           </div>
 
-          <div className="rounded-3xl border border-border bg-card p-6 shadow-[0_6px_18px_rgba(15,23,42,0.08)]">
-            <h3 className="text-lg font-semibold text-foreground">Work Mode Split</h3>
-            <div className="mt-4 h-52">
-              <WorkModeChart data={workModeSplitData} />
+          <div className="grid gap-6 xl:grid-cols-3">
+            <div className="rounded-3xl border border-border bg-card p-6 shadow-[0_6px_18px_rgba(15,23,42,0.08)]">
+              <h3 className="text-lg font-semibold text-foreground">
+                Attendance Trend
+              </h3>
+              <div className="mt-4 h-52">
+                <AttendanceChart data={attendanceTrendData} />
+              </div>
+            </div>
+
+            <div className="rounded-3xl border border-border bg-card p-6 shadow-[0_6px_18px_rgba(15,23,42,0.08)]">
+              <h3 className="text-lg font-semibold text-foreground">
+                Work Mode Distribution
+              </h3>
+              <div className="mt-4 h-52">
+                <WorkModeChart data={workModeSplitData} />
+              </div>
+            </div>
+
+            <div className="rounded-3xl border border-border bg-card p-6 shadow-[0_6px_18px_rgba(15,23,42,0.08)]">
+              <h3 className="text-lg font-semibold text-foreground">Task Progress</h3>
+              <div className="mt-4 h-52">
+                <TaskChart data={taskProgressData} />
+              </div>
             </div>
           </div>
+        </div>
+      </FadeIn>
 
-          <div className="rounded-3xl border border-border bg-card p-6 shadow-[0_6px_18px_rgba(15,23,42,0.08)]">
-            <h3 className="text-lg font-semibold text-foreground">Task Completion</h3>
-            <div className="mt-4 h-52">
-              <TaskChart data={taskCompletionData} />
+      <FadeIn delay={0.5}>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-foreground">
+              Upcoming Activities
+            </h2>
+          </div>
+
+          <div className="grid gap-6 lg:grid-cols-3">
+            <div className="rounded-3xl border border-primary/40 bg-primary p-6 text-white shadow-[0_10px_24px_rgba(36,91,167,0.25)] card-hover">
+              <p className="text-xs uppercase tracking-[0.2em] text-white/80">
+                Upcoming Shift
+              </p>
+              <p className="mt-3 text-lg font-semibold text-white">Tomorrow</p>
+              <p className="mt-2 text-white/80">
+                {dashboard.nextShiftMode || "Office"}
+              </p>
+              <p className="text-white/80">
+                {dashboard.nextShiftWindow || "09:00 AM - 06:00 PM"}
+              </p>
+            </div>
+
+            <div className="rounded-3xl border border-primary/40 bg-primary p-6 text-white shadow-[0_10px_24px_rgba(36,91,167,0.25)] card-hover">
+              <p className="text-xs uppercase tracking-[0.2em] text-white/80">
+                Upcoming Leave
+              </p>
+              <p className="mt-3 text-lg font-semibold text-white">
+                {dashboard.nextLeaveRange || "15 Jun - 17 Jun"}
+              </p>
+              <p className="mt-2 text-white/80">
+                {dashboard.nextLeaveStatus || "Approved"}
+              </p>
+            </div>
+
+            <div className="rounded-3xl border border-primary/40 bg-primary p-6 text-white shadow-[0_10px_24px_rgba(36,91,167,0.25)] card-hover">
+              <p className="text-xs uppercase tracking-[0.2em] text-white/80">
+                Recent Notifications
+              </p>
+              <ul className="mt-3 space-y-2 text-sm text-white/80">
+                <li>{dashboard.notificationOne || "Task Assigned"}</li>
+                <li>{dashboard.notificationTwo || "Leave Approved"}</li>
+                <li>{dashboard.notificationThree || "Shift Updated"}</li>
+              </ul>
             </div>
           </div>
         </div>
