@@ -1,19 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { CalendarDays, Clock, ClipboardList, Flame } from "lucide-react";
-import {
-  Bar,
-  BarChart,
-  Cell,
-  Line,
-  LineChart,
-  Pie,
-  PieChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
 import { FadeIn } from "../../components/motion/FadeIn.jsx";
+import AttendanceChart from "../../components/charts/AttendanceChart.jsx";
+import TaskChart from "../../components/charts/TaskChart.jsx";
+import WorkModeChart from "../../components/charts/WorkModeChart.jsx";
 import { getEmployeeDashboard } from "../../services/dashboardServices.js";
 
 const TOKEN_KEY = "flexiwork_token";
@@ -86,29 +76,43 @@ const EmployeeDashboard = () => {
     },
   ];
 
-  const attendanceTrend = [
-    { name: "Mon", hours: 7.5 },
-    { name: "Tue", hours: 8.0 },
-    { name: "Wed", hours: 8.2 },
-    { name: "Thu", hours: 7.8 },
-    { name: "Fri", hours: 8.5 },
-  ];
+  const attendanceTrendData = {
+    labels: ["Mon", "Tue", "Wed", "Thu", "Fri"],
+    datasets: [
+      {
+        label: "Worked Hours",
+        data: [7.5, 8.0, 8.2, 7.8, 8.5],
+        borderColor: "#245BA7",
+        backgroundColor: "#245BA7",
+        tension: 0.4,
+      },
+    ],
+  };
 
-  const workModeSplit = [
-    { name: "Office", value: 3 },
-    { name: "Remote", value: 5 },
-    { name: "Hybrid", value: 2 },
-  ];
+  const workModeSplitData = {
+    labels: ["Office", "Remote", "Hybrid"],
+    datasets: [
+      {
+        data: [3, 5, 2],
+        backgroundColor: ["#245BA7", "#3B82F6", "#93C5FD"],
+        borderWidth: 0,
+      },
+    ],
+  };
 
-  const taskCompletion = [
-    { name: "Assigned", value: dashboard.assignedTasks || 0 },
-    {
-      name: "Completed",
-      value: Math.max((dashboard.assignedTasks || 0) - 2, 0),
-    },
-  ];
-
-  const pieColors = ["#245BA7", "#3B82F6", "#93C5FD"];
+  const taskCompletionData = {
+    labels: ["Assigned", "Completed"],
+    datasets: [
+      {
+        label: "Tasks",
+        data: [
+          dashboard.assignedTasks || 0,
+          Math.max((dashboard.assignedTasks || 0) - 2, 0),
+        ],
+        backgroundColor: ["#245BA7", "#60A5FA"],
+      },
+    ],
+  };
 
   return (
     <div className="space-y-10">
@@ -221,60 +225,21 @@ const EmployeeDashboard = () => {
               Attendance Trend
             </h3>
             <div className="mt-4 h-52">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={attendanceTrend}>
-                  <XAxis dataKey="name" stroke="#94A3B8" tickLine={false} />
-                  <YAxis stroke="#94A3B8" tickLine={false} />
-                  <Tooltip />
-                  <Line
-                    type="monotone"
-                    dataKey="hours"
-                    stroke="#245BA7"
-                    strokeWidth={3}
-                    dot={{ fill: "#245BA7" }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
+              <AttendanceChart data={attendanceTrendData} />
             </div>
           </div>
 
           <div className="rounded-3xl border border-border bg-card p-6 shadow-[0_6px_18px_rgba(15,23,42,0.08)]">
             <h3 className="text-lg font-semibold text-foreground">Work Mode Split</h3>
             <div className="mt-4 h-52">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Tooltip />
-                  <Pie
-                    data={workModeSplit}
-                    dataKey="value"
-                    nameKey="name"
-                    innerRadius={50}
-                    outerRadius={80}
-                    paddingAngle={4}
-                  >
-                    {workModeSplit.map((entry, index) => (
-                      <Cell
-                        key={entry.name}
-                        fill={pieColors[index % pieColors.length]}
-                      />
-                    ))}
-                  </Pie>
-                </PieChart>
-              </ResponsiveContainer>
+              <WorkModeChart data={workModeSplitData} />
             </div>
           </div>
 
           <div className="rounded-3xl border border-border bg-card p-6 shadow-[0_6px_18px_rgba(15,23,42,0.08)]">
             <h3 className="text-lg font-semibold text-foreground">Task Completion</h3>
             <div className="mt-4 h-52">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={taskCompletion}>
-                  <XAxis dataKey="name" stroke="#94A3B8" tickLine={false} />
-                  <YAxis stroke="#94A3B8" tickLine={false} />
-                  <Tooltip />
-                  <Bar dataKey="value" fill="#3B82F6" radius={[8, 8, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
+              <TaskChart data={taskCompletionData} />
             </div>
           </div>
         </div>
