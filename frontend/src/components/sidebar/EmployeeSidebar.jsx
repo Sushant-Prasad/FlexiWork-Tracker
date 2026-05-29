@@ -60,7 +60,7 @@ const EmployeeSidebar = ({ user }) => {
       initial={{ x: -50, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.4 }}
-      className="flex h-screen w-[280px] flex-col justify-between border-r border-zinc-800 bg-zinc-950 px-5 py-6"
+      className="flex h-full w-[280px] flex-col justify-between overflow-y-auto border-r border-zinc-800 bg-zinc-950 px-5 py-6"
     >
 
       {/* ======================================

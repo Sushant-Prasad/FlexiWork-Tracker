@@ -28,7 +28,7 @@ const EmployeeLayout = () => {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white">
+    <div className="flex h-screen flex-col bg-zinc-950 text-white">
 
       {/* ======================================
           COMMON NAVBAR
@@ -38,19 +38,19 @@ const EmployeeLayout = () => {
       {/* ======================================
           MAIN LAYOUT
       ====================================== */}
-      <div className="flex">
+      <div className="flex min-h-0 flex-1 overflow-hidden">
 
         {/* ======================================
             SIDEBAR
         ====================================== */}
-        <div className="hidden lg:block">
+        <div className="hidden lg:block w-[280px] shrink-0">
           <EmployeeSidebar user={user} />
         </div>
 
         {/* ======================================
             MAIN PAGE CONTENT
         ====================================== */}
-        <main className="flex-1 p-6 overflow-y-auto">
+        <main className="min-h-0 flex-1 overflow-y-auto p-6">
 
           {/* Nested Routes Render Here */}
           <Outlet />

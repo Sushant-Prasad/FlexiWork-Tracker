@@ -16,6 +16,7 @@ const Sidebar = () => {
       hidden
       lg:flex
       w-72
+      h-full
       flex-col
       border-r
       border-slate-200

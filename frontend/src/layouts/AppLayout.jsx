@@ -7,11 +7,11 @@ const AppLayout = () => {
   const { user } = useAuth();
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="flex h-screen flex-col bg-background text-foreground">
       <Navbar />
-      <div className="flex">
+      <div className="flex min-h-0 flex-1 overflow-hidden">
         {user ? <Sidebar /> : null}
-        <main className="min-h-[calc(100vh-72px)] flex-1 px-6 py-8">
+        <main className="min-h-0 flex-1 overflow-y-auto px-6 py-8">
           <Outlet />
         </main>
       </div>
