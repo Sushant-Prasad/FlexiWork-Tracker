@@ -211,3 +211,34 @@ export const getMyWorkLogs = async (params, token) => {
     throw new Error(getErrorMessage(error, "Failed to fetch work logs"));
   }
 };
+
+/*
+==================================================
+GET TODAY'S WORK LOG
+--------------------------------------------------
+API:
+GET /api/worklogs/today
+
+Access:
+Authenticated users
+
+Purpose:
+Fetches today's work log for the logged-in user.
+Returns a default UNLOGGED record if none exists.
+
+Return:
+Today's work log record or a default UNLOGGED object.
+
+Business Logic:
+Used by the Today's Work Log card on the dashboard
+and My Work Logs page to show current-day status.
+==================================================
+*/
+export const getTodayWorkLog = async (token) => {
+  try {
+    const response = await api.get("/worklogs/today", withAuth(token));
+    return response.data;
+  } catch (error) {
+    throw new Error(getErrorMessage(error, "Failed to fetch today's work log"));
+  }
+};
