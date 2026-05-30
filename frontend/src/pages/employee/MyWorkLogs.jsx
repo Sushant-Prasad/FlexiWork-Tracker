@@ -100,9 +100,9 @@ const MyWorkLogs = () => {
         <WorkLogStats stats={stats} isLoading={historyQuery.isLoading} />
       </FadeIn>
 
-      {/* ── Charts Row ───────────────────────────────────────────────── */}
+      {/* ── Charts + Calendar Row ─────────────────────────────────────── */}
       <FadeIn delay={0.15}>
-        <div className="grid gap-6 lg:grid-cols-2">
+        <div className="grid gap-6 xl:grid-cols-[1fr_280px]">
 
           {/* Worked Hours Trend */}
           <div className="rounded-3xl border border-border bg-card p-6 shadow-[0_4px_14px_rgba(15,23,42,0.06)]">
@@ -117,6 +117,26 @@ const MyWorkLogs = () => {
             <WorkHoursChart logs={logs} isLoading={historyQuery.isLoading} />
           </div>
 
+          {/* Calendar — compact right column */}
+          <div className="rounded-3xl border border-border bg-card p-5 shadow-[0_4px_14px_rgba(15,23,42,0.06)]">
+            <div className="mb-4">
+              <h2 className="text-base font-semibold text-foreground">
+                Mode Calendar
+              </h2>
+              <p className="mt-0.5 text-xs text-muted-foreground">
+                Color-coded daily view
+              </p>
+            </div>
+            <WorkLogCalendar logs={logs} isLoading={historyQuery.isLoading} />
+          </div>
+
+        </div>
+      </FadeIn>
+
+      {/* ── Distribution + History ────────────────────────────────────── */}
+      <FadeIn delay={0.2}>
+        <div className="grid gap-6 xl:grid-cols-[300px_1fr]">
+
           {/* Work Mode Distribution */}
           <div className="rounded-3xl border border-border bg-card p-6 shadow-[0_4px_14px_rgba(15,23,42,0.06)]">
             <div className="mb-5">
@@ -128,26 +148,6 @@ const MyWorkLogs = () => {
               </p>
             </div>
             <WorkModeChart logs={logs} isLoading={historyQuery.isLoading} />
-          </div>
-
-        </div>
-      </FadeIn>
-
-      {/* ── Calendar + History ───────────────────────────────────────── */}
-      <FadeIn delay={0.2}>
-        <div className="grid gap-6 xl:grid-cols-[340px_1fr]">
-
-          {/* Calendar */}
-          <div className="rounded-3xl border border-border bg-card p-6 shadow-[0_4px_14px_rgba(15,23,42,0.06)]">
-            <div className="mb-5">
-              <h2 className="text-base font-semibold text-foreground">
-                Work Mode Calendar
-              </h2>
-              <p className="mt-0.5 text-xs text-muted-foreground">
-                Color-coded daily mode view
-              </p>
-            </div>
-            <WorkLogCalendar logs={logs} isLoading={historyQuery.isLoading} />
           </div>
 
           {/* History Table */}
