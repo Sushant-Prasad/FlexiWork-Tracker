@@ -1,4 +1,5 @@
 import User from "../models/User.js"; // User model
+import Team from "../models/Team.js"; // Team model
 
 // Validate timezone using Intl API
 const isValidTimezone = (timezone) => {
@@ -136,14 +137,38 @@ export const getTeamMembers = async (req, res) => {
 			return res.status(404).json({ success: false, message: "User has no team" });
 		}
 
+		// Fetch team to get the definitive managerId
+		const team = await Team.findById(user.teamId).populate(
+			"managerId",
+			"-password"
+		);
+
+		// Fetch all users assigned to this team
 		const members = await User.find({ teamId: user.teamId })
 			.select("-password") // Exclude passwords
 			.sort({ name: 1 }); // Sort by name
 
+		// If manager is not in the members list (teamId not set on their User doc),
+		// include them separately so the frontend always has manager data.
+		const managerInMembers = members.some(
+			(m) => m._id.toString() === team?.managerId?._id?.toString()
+		);
+
+		const allMembers =
+			team?.managerId && !managerInMembers
+				? [team.managerId, ...members]
+				: members;
+
 		return res.status(200).json({
 			success: true,
-			count: members.length,
-			data: members,
+			count: allMembers.length,
+			data: allMembers,
+			team: {
+				_id: team?._id,
+				name: team?.name,
+				site: team?.site,
+				managerId: team?.managerId?._id, // Just the ID for frontend matching
+			},
 		});
 	} catch (error) {
 		return res
