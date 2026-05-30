@@ -23,28 +23,24 @@ const STAT_CONFIG = [
     key: "total",
     label: "Total Requests",
     icon: ClipboardList,
-    cardClass: "bg-primary text-primary-foreground",
     iconBg: "bg-white/15",
   },
   {
     key: "pending",
     label: "Pending",
     icon: Clock,
-    cardClass: "bg-accent text-accent-foreground",
     iconBg: "bg-white/20",
   },
   {
     key: "approved",
     label: "Approved",
     icon: CheckCircle2,
-    cardClass: "bg-primary/80 text-primary-foreground",
     iconBg: "bg-white/20",
   },
   {
     key: "rejected",
     label: "Rejected",
     icon: XCircle,
-    cardClass: "bg-destructive text-destructive-foreground",
     iconBg: "bg-white/20",
   },
 ];
@@ -62,10 +58,10 @@ const LeaveStats = ({ stats, isLoading }) => {
 
   return (
     <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-      {STAT_CONFIG.map(({ key, label, icon: Icon, cardClass, iconBg }) => (
+      {STAT_CONFIG.map(({ key, label, icon: Icon, iconBg }) => (
         <div
           key={key}
-          className={`rounded-3xl p-6 shadow-[0_8px_24px_rgba(15,23,42,0.12)] card-hover ${cardClass}`}
+          className="rounded-3xl bg-primary p-6 shadow-[0_8px_24px_rgba(15,23,42,0.12)] card-hover"
         >
           <div className="flex items-start justify-between">
             <div>
