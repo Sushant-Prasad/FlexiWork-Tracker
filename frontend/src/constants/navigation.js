@@ -60,75 +60,110 @@ export const NAV_ITEMS = {
   ],
 
   MANAGER: [
-    {
-      label: "Dashboard",
-      path: "/manager/dashboard",
-      icon: LayoutDashboard,
-    },
-    {
-      label: "Teams",
-      path: "/manager/teams",
-      icon: Users,
-    },
-    {
-      label: "Projects",
-      path: "/manager/projects",
-      icon: Briefcase,
-    },
-    {
-      label: "Tasks",
-      path: "/manager/tasks",
-      icon: CheckSquare,
-    },
-    {
-      label: "Attendance Analytics",
-      path: "/manager/attendance-analytics",
-      icon: BarChart3,
-    },
-    {
-      label: "Leave Approvals",
-      path: "/manager/leaves-approval",
-      icon: UserCheck,
-    },
-  ],
+  {
+    label: "Dashboard",
+    path: "/manager/dashboard",
+    icon: LayoutDashboard,
+  },
+  {
+    label: "Teams",
+    path: "/manager/teams",
+    icon: Users,
+  },
+  {
+    label: "Projects",
+    path: "/manager/projects",
+    icon: Briefcase,
+  },
+  {
+    label: "Tasks",
+    path: "/manager/tasks",
+    icon: CheckSquare,
+  },
+  {
+    label: "Attendance",
+    path: "/manager/attendance-analytics",
+    icon: CalendarDays,
+  },
+  {
+    label: "Leave Approvals",
+    path: "/manager/leaves-approval",
+    icon: UserCheck,
+  },
+  {
+    label: "Work Logs",
+    path: "/manager/worklogs",
+    icon: Activity,
+  },
+  {
+    label: "Notifications",
+    path: "/manager/notifications",
+    icon: Bell,
+  },
+  {
+    label: "Profile",
+    path: "/manager/profile",
+    icon: User,
+  },
+],
 
   SYSTEM_ADMIN: [
-    {
-      label: "Dashboard",
-      path: "/admin/dashboard",
-      icon: LayoutDashboard,
-    },
-    {
-      label: "Users",
-      path: "/admin/users",
-      icon: User,
-    },
-    {
-      label: "Teams",
-      path: "/admin/teams",
-      icon: Building2,
-    },
-    {
-      label: "Projects",
-      path: "/admin/projects",
-      icon: Briefcase,
-    },
-    {
-      label: "System Analytics",
-      path: "/admin/system-analytics",
-      icon: BarChart3,
-    },
-    {
-      label: "Audit Logs",
-      path: "/admin/audits",
-      icon: Shield,
-    },
-    {
-      label: "Settings",
-      path: "/admin/settings",
-      icon: Settings,
-    },
-  ],
+  {
+    label: "Dashboard",
+    path: "/admin/dashboard",
+    icon: LayoutDashboard,
+  },
+  {
+    label: "Users",
+    path: "/admin/users",
+    icon: User,
+  },
+  {
+    label: "Teams",
+    path: "/admin/teams",
+    icon: Building2,
+  },
+  {
+    label: "Projects",
+    path: "/admin/projects",
+    icon: Briefcase,
+  },
+  {
+    label: "Attendance",
+    path: "/admin/attendance",
+    icon: CalendarDays,
+  },
+  {
+    label: "Work Logs",
+    path: "/admin/worklogs",
+    icon: Activity,
+  },
+  {
+    label: "Notifications",
+    path: "/admin/notifications",
+    icon: Bell,
+  },
+  {
+    label: "System Analytics",
+    path: "/admin/system-analytics",
+    icon: BarChart3,
+  },
+  {
+    label: "Audit Logs",
+    path: "/admin/audits",
+    icon: Shield,
+  },
+  {
+    label: "Settings",
+    path: "/admin/settings",
+    icon: Settings,
+  },
+  {
+    label: "Profile",
+    path: "/admin/profile",
+    icon: User,
+  },
+],
 };
 
 export const ROLE_DEFAULT_PATHS = {
