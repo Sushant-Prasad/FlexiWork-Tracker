@@ -1,10 +1,11 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { NAV_ITEMS } from "../constants/navigation.js";
 import { useAuth } from "../context/AuthContext.jsx";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, LogOut } from "lucide-react";
 
 const Sidebar = () => {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   const role = user?.role || "EMPLOYEE";
 
@@ -161,26 +162,17 @@ const Sidebar = () => {
 
       {/* Footer */}
       <div className="border-t border-slate-200 p-4">
-
-        <div
-          className="
-          rounded-2xl
-          bg-gradient-to-r
-          from-blue-600
-          to-blue-500
-          p-4
-          text-white
-        "
+        <button
+          type="button"
+          onClick={() => {
+            logout();
+            navigate("/login");
+          }}
+          className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#245BA7] px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#111c31]"
         >
-          <p className="text-sm font-medium">
-            FlexiWork Tracker
-          </p>
-
-          <p className="mt-1 text-xs text-blue-100">
-            Smart Hybrid Workforce Management
-          </p>
-        </div>
-
+          <LogOut size={18} />
+          Logout
+        </button>
       </div>
 
     </aside>
