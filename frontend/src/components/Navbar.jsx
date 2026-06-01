@@ -86,24 +86,42 @@ const Navbar = () => {
           </button>
 
           {/* Logo */}
-          <Link
-            to="/"
-            className="flex items-center gap-3"
-          >
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-lg font-bold text-primary-foreground">
-              F
-            </div>
+          {isAuthenticated ? (
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-lg font-bold text-primary-foreground">
+                F
+              </div>
 
-            <div className="hidden sm:block">
-              <h1 className="text-lg font-bold text-foreground">
-                FlexiWork Tracker
-              </h1>
+              <div className="hidden sm:block">
+                <h1 className="text-lg font-bold text-foreground">
+                  FlexiWork Tracker
+                </h1>
 
-              <p className="text-xs text-muted-foreground">
-                Hybrid Workforce Platform
-              </p>
+                <p className="text-xs text-muted-foreground">
+                  Hybrid Workforce Platform
+                </p>
+              </div>
             </div>
-          </Link>
+          ) : (
+            <Link
+              to="/"
+              className="flex items-center gap-3"
+            >
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-lg font-bold text-primary-foreground">
+                F
+              </div>
+
+              <div className="hidden sm:block">
+                <h1 className="text-lg font-bold text-foreground">
+                  FlexiWork Tracker
+                </h1>
+
+                <p className="text-xs text-muted-foreground">
+                  Hybrid Workforce Platform
+                </p>
+              </div>
+            </Link>
+          )}
 
         </div>
 
