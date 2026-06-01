@@ -137,6 +137,16 @@ export const ROLE_DEFAULT_PATHS = {
   SYSTEM_ADMIN: "/admin/dashboard",
 };
 
+export const ROLE_PROFILE_PATHS = {
+  EMPLOYEE: "/employee/profile",
+  MANAGER: "/manager/profile",
+  SYSTEM_ADMIN: "/admin/profile",
+};
+
 export const getRoleDefaultPath = (role) => {
   return ROLE_DEFAULT_PATHS[role] || "/";
+};
+
+export const getRoleProfilePath = (role) => {
+  return ROLE_PROFILE_PATHS[role] || "/";
 };

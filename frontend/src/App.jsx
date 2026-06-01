@@ -59,6 +59,7 @@ function App() {
               element={<ManagerAttendanceAnalytics />}
             />
             <Route path="/manager/leaves-approval" element={<ManagerLeavesApproval />} />
+            <Route path="/manager/profile" element={<EmployeeProfile />} />
           </Route>
 
           <Route element={<ProtectedRoute allowedRoles={["SYSTEM_ADMIN"]} />}>
@@ -69,6 +70,7 @@ function App() {
             <Route path="/admin/projects" element={<AdminProjects />} />
             <Route path="/admin/system-analytics" element={<AdminSystemAnalytics />} />
             <Route path="/admin/settings" element={<AdminSettings />} />
+            <Route path="/admin/profile" element={<EmployeeProfile />} />
           </Route>
 
           <Route path="*" element={<NotFound />} />

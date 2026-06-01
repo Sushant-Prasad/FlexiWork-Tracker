@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import {
   Bell,
@@ -10,7 +10,10 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../context/AuthContext.jsx";
-import { getRoleDefaultPath } from "../constants/navigation.js";
+import {
+  getRoleDefaultPath,
+  getRoleProfilePath,
+} from "../constants/navigation.js";
 
 /*
 ==================================================
@@ -32,10 +35,31 @@ const Navbar = () => {
   const [profileOpen, setProfileOpen] =
     useState(false);
 
+  const profileRef = useRef(null);
+
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const dashboardPath = getRoleDefaultPath(user?.role);
+  const profilePath = getRoleProfilePath(user?.role);
   const isAuthenticated = !!user;
+
+  useEffect(() => {
+    if (!profileOpen) return;
+
+    const handleClickOutside = (event) => {
+      if (profileRef.current && !profileRef.current.contains(event.target)) {
+        setProfileOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+    };
+  }, [profileOpen]);
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur-xl">
@@ -112,22 +136,12 @@ const Navbar = () => {
             </>
           ) : (
             <>
-              {/* Notification */}
-              <button className="relative rounded-xl border border-border p-2 text-foreground transition hover:bg-muted">
-
-                <Bell size={20} />
-
-                {/* Notification Badge */}
-                <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">
-                  3
-                </span>
-
-              </button>
+              
 
               {/* ======================================
                   PROFILE DROPDOWN
               ====================================== */}
-              <div className="relative">
+              <div className="relative" ref={profileRef}>
 
                 <button
                   onClick={() =>
@@ -192,23 +206,16 @@ const Navbar = () => {
                       <div className="p-2">
 
                         <Link
-                          to="/profile"
+                          to={profilePath}
+                          onClick={() => setProfileOpen(false)}
                           className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-foreground transition hover:bg-muted"
                         >
                           <User size={18} />
                           My Profile
                         </Link>
-
-                        <Link
-                          to="/settings"
-                          className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-foreground transition hover:bg-muted"
-                        >
-                          <Settings size={18} />
-                          Settings
-                        </Link>
-
                         <button
                           onClick={() => {
+                            setProfileOpen(false);
                             logout();
                             navigate("/login");
                           }}
