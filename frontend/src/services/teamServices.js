@@ -410,3 +410,216 @@ export const removeTeamMember = async (
 
   }
 };
+
+/*
+==================================================
+GET MY TEAM
+--------------------------------------------------
+API:
+GET /api/teams/my-team
+
+Access:
+Any authenticated user
+
+Purpose:
+Fetch the user's own team (if they have a teamId).
+Used by team members to view their team info.
+
+Return Value:
+{ team }
+==================================================
+*/
+export const getMyTeam = async (token) => {
+  try {
+    const response = await api.get(
+      "/teams/my-team",
+      withAuth(token)
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(
+      getErrorMessage(
+        error,
+        "Failed to fetch your team"
+      )
+    );
+  }
+};
+
+/*
+==================================================
+GET TEAM OVERVIEW
+--------------------------------------------------
+API:
+GET /api/teams/:id/overview
+
+Access:
+SYSTEM_ADMIN, MANAGER
+
+Purpose:
+Get team overview metrics for dashboard.
+
+Return Value:
+{
+  teamName: string,
+  memberCount: number,
+  officeToday: number,
+  remoteToday: number,
+  hybridToday: number,
+  unlogged: number,
+  officeCapacity: number,
+  manager: { _id, name, email },
+  site: string
+}
+==================================================
+*/
+export const getTeamOverview = async (
+  teamId,
+  token
+) => {
+  try {
+    const response = await api.get(
+      `/teams/${teamId}/overview`,
+      withAuth(token)
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(
+      getErrorMessage(
+        error,
+        "Failed to fetch team overview"
+      )
+    );
+  }
+};
+
+/*
+==================================================
+GET TEAM OCCUPANCY
+--------------------------------------------------
+API:
+GET /api/teams/:id/occupancy
+
+Access:
+SYSTEM_ADMIN, MANAGER
+
+Purpose:
+Get office occupancy data for the team.
+
+Return Value:
+{
+  capacity: number,
+  occupied: number,
+  available: number,
+  occupancyPercentage: number
+}
+==================================================
+*/
+export const getTeamOccupancy = async (
+  teamId,
+  token
+) => {
+  try {
+    const response = await api.get(
+      `/teams/${teamId}/occupancy`,
+      withAuth(token)
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(
+      getErrorMessage(
+        error,
+        "Failed to fetch occupancy"
+      )
+    );
+  }
+};
+
+/*
+==================================================
+GET TEAM PRODUCTIVITY
+--------------------------------------------------
+API:
+GET /api/teams/:id/productivity
+
+Access:
+SYSTEM_ADMIN, MANAGER
+
+Purpose:
+Get team productivity metrics.
+
+Return Value:
+{
+  tasksCompleted: number,
+  averageHours: number,
+  pendingReviews: number
+}
+==================================================
+*/
+export const getTeamProductivity = async (
+  teamId,
+  token
+) => {
+  try {
+    const response = await api.get(
+      `/teams/${teamId}/productivity`,
+      withAuth(token)
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(
+      getErrorMessage(
+        error,
+        "Failed to fetch productivity"
+      )
+    );
+  }
+};
+
+/*
+==================================================
+GET TEAM DAILY SNAPSHOT
+--------------------------------------------------
+API:
+GET /api/teams/:id/daily-snapshot
+
+Access:
+SYSTEM_ADMIN, MANAGER
+
+Purpose:
+Get team daily snapshot with member details.
+
+Return Value:
+{
+  date: string,
+  teamName: string,
+  members: [{
+    employee: string,
+    role: string,
+    plannedMode: string,
+    actualMode: string,
+    attendanceStatus: string,
+    workedHours: number
+  }]
+}
+==================================================
+*/
+export const getTeamDailySnapshot = async (
+  teamId,
+  token
+) => {
+  try {
+    const response = await api.get(
+      `/teams/${teamId}/daily-snapshot`,
+      withAuth(token)
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(
+      getErrorMessage(
+        error,
+        "Failed to fetch team snapshot"
+      )
+    );
+  }
+};

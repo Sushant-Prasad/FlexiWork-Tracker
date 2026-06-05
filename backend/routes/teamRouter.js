@@ -10,6 +10,11 @@ import {
   listTeams,
   removeMember,
   updateTeam,
+  getTeamOverview,
+  getTeamOccupancy,
+  getTeamProductivity,
+  getTeamDailySnapshot,
+  getMyTeam,
 } from "../controllers/teamController.js";
 
 /*
@@ -59,6 +64,9 @@ teamRouter.post(
 // GET /api/teams - list teams (SYSTEM_ADMIN, MANAGER)
 teamRouter.get("/", authMiddleware, roleMiddleware("SYSTEM_ADMIN", "MANAGER"), listTeams);
 
+// GET /api/teams/my-team - get user's own team (any authenticated user)
+teamRouter.get("/my-team", authMiddleware, getMyTeam);
+
 // GET /api/teams/:id - team detail (SYSTEM_ADMIN, MANAGER)
 teamRouter.get(
   "/:id",
@@ -100,6 +108,46 @@ teamRouter.delete(
   userIdParam,
   validateMiddleware,
   removeMember
+);
+
+// GET /api/teams/:id/overview - team overview metrics
+teamRouter.get(
+  "/:id/overview",
+  authMiddleware,
+  roleMiddleware("SYSTEM_ADMIN", "MANAGER"),
+  teamIdParam,
+  validateMiddleware,
+  getTeamOverview
+);
+
+// GET /api/teams/:id/occupancy - team occupancy data
+teamRouter.get(
+  "/:id/occupancy",
+  authMiddleware,
+  roleMiddleware("SYSTEM_ADMIN", "MANAGER"),
+  teamIdParam,
+  validateMiddleware,
+  getTeamOccupancy
+);
+
+// GET /api/teams/:id/productivity - team productivity metrics
+teamRouter.get(
+  "/:id/productivity",
+  authMiddleware,
+  roleMiddleware("SYSTEM_ADMIN", "MANAGER"),
+  teamIdParam,
+  validateMiddleware,
+  getTeamProductivity
+);
+
+// GET /api/teams/:id/daily-snapshot - team daily snapshot
+teamRouter.get(
+  "/:id/daily-snapshot",
+  authMiddleware,
+  roleMiddleware("SYSTEM_ADMIN", "MANAGER"),
+  teamIdParam,
+  validateMiddleware,
+  getTeamDailySnapshot
 );
 
 export default teamRouter;
