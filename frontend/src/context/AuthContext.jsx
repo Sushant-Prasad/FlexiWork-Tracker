@@ -10,22 +10,26 @@ const TOKEN_KEY = "flexiwork_token";
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [token, setToken] = useState(() => localStorage.getItem(TOKEN_KEY));
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem(TOKEN_KEY);
-    if (!token) {
+    const savedToken = localStorage.getItem(TOKEN_KEY);
+    if (!savedToken) {
+      setToken(null);
       setIsLoading(false);
       return;
     }
 
     const loadUser = async () => {
       try {
-        const data = await getCurrentUser(token);
+        setToken(savedToken);
+        const data = await getCurrentUser(savedToken);
         const current = data?.user || data?.data || data;
         setUser(current || null);
       } catch (error) {
         localStorage.removeItem(TOKEN_KEY);
+        setToken(null);
         setUser(null);
       } finally {
         setIsLoading(false);
@@ -44,6 +48,7 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem(TOKEN_KEY, token);
     }
 
+    setToken(token || null);
     setUser(current || null);
     return { token, user: current };
   };
@@ -54,19 +59,21 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     localStorage.removeItem(TOKEN_KEY);
+    setToken(null);
     setUser(null);
   };
 
   const value = useMemo(
     () => ({
       user,
+      token,
       isLoading,
       login,
       register,
       logout,
       setUser,
     }),
-    [user, isLoading]
+    [user, token, isLoading]
   );
 
   return (

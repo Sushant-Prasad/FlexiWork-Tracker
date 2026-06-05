@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -46,17 +46,25 @@ const ManagerTeams = () => {
     retry: false,
   });
 
+  // Combine all teams (user's team + managed teams, remove duplicates)
+  const allTeams = useMemo(() => {
+    const teams = [
+      ...(userTeamData?.team ? [userTeamData.team] : []),
+      ...(teamsData?.teams || []),
+    ].filter(Boolean);
+
+    return teams.filter(
+      (team, index, self) =>
+        team?._id && index === self.findIndex((item) => item?._id === team._id)
+    );
+  }, [teamsData, userTeamData]);
+
   // Auto-select first team if available
   useEffect(() => {
-    const allTeams = [
-      ...(userTeamData ? [userTeamData.team] : []),
-      ...(teamsData?.teams || []),
-    ];
-    
     if (allTeams.length > 0 && !selectedTeamId) {
       setSelectedTeamId(allTeams[0]._id);
     }
-  }, [teamsData, userTeamData, selectedTeamId]);
+  }, [allTeams, selectedTeamId]);
 
   // Fetch team overview
   const {
@@ -101,12 +109,6 @@ const ManagerTeams = () => {
     queryFn: () => getTeamDailySnapshot(selectedTeamId, token),
     enabled: !!selectedTeamId && !!token,
   });
-
-  // Combine all teams (user's team + managed teams, remove duplicates)
-  const allTeams = [
-    ...(userTeamData ? [userTeamData.team] : []),
-    ...(teamsData?.teams || []),
-  ].filter((team, index, self) => index === self.findIndex((t) => t._id === team._id));
 
   return (
     <div className="space-y-6">
