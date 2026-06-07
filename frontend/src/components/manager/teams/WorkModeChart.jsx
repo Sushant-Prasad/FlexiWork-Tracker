@@ -6,7 +6,7 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 const WorkModeChart = ({ snapshot, isLoading }) => {
   if (isLoading) {
     return (
-      <div className="glass-card rounded-lg p-6 border border-white/10 mb-8 animate-pulse">
+      <div className="rounded-lg p-6 bg-prime border border-primary/20 mb-8 animate-pulse text-white">
         <div className="h-6 bg-white/20 rounded w-1/3 mb-6"></div>
         <div className="w-full h-48 bg-white/10 rounded"></div>
       </div>
@@ -78,7 +78,7 @@ const WorkModeChart = ({ snapshot, isLoading }) => {
   };
 
   return (
-    <div className="glass-card rounded-lg p-6 border border-white/10 mb-8">
+    <div className="rounded-lg p-6 bg-prime border border-primary/20 mb-8 text-white">
       <h3 className="text-lg font-semibold text-white mb-6">Work Mode Distribution</h3>
       <div style={{ maxHeight: "300px", display: "flex", alignItems: "center", justifyContent: "center" }}>
         {total > 0 ? (

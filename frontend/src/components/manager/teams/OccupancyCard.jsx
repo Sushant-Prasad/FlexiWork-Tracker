@@ -3,7 +3,7 @@ import { Building2 } from "lucide-react";
 const OccupancyCard = ({ occupancy, isLoading }) => {
   if (isLoading) {
     return (
-      <div className="glass-card rounded-lg p-6 border border-white/10 mb-8 animate-pulse">
+      <div className="rounded-lg p-6 bg-prime border border-primary/20 mb-8 animate-pulse text-white">
         <div className="h-6 bg-white/20 rounded w-1/3 mb-6"></div>
         <div className="space-y-4">
           <div className="h-4 bg-white/10 rounded"></div>
@@ -19,17 +19,17 @@ const OccupancyCard = ({ occupancy, isLoading }) => {
   const percentage = occupancy?.occupancyPercentage || 0;
 
   return (
-    <div className="glass-card rounded-lg p-6 border border-white/10 mb-8">
+    <div className="rounded-lg p-6 bg-prime border border-primary/20 mb-8 text-white">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-lg font-semibold text-white">Office Occupancy</h3>
-        <Building2 size={24} className="text-blue-400" />
+        <Building2 size={24} className="text-white" />
       </div>
 
       <div className="space-y-4">
         {/* Occupancy Bar */}
         <div className="space-y-2">
           <div className="flex justify-between items-center">
-            <span className="text-sm text-zinc-400">Capacity Usage</span>
+            <span className="text-sm text-white/80">Capacity Usage</span>
             <span className="text-sm font-semibold text-white">{percentage}%</span>
           </div>
           <div className="w-full h-3 bg-white/10 rounded-full overflow-hidden">

@@ -55,7 +55,7 @@ const TeamInfoCard = ({ overview, team, isLoading }) => {
   ];
 
   return (
-    <div className="glass-card rounded-lg p-6 border border-white/10 mb-8">
+    <div className="rounded-lg p-6 bg-prime border border-primary/20 mb-8 text-white">
       <h3 className="text-lg font-semibold text-white mb-6">Team Information</h3>
       <div className="space-y-4">
         {info.map((item, idx) => {
@@ -63,8 +63,8 @@ const TeamInfoCard = ({ overview, team, isLoading }) => {
           return (
             <div key={idx} className="flex items-center justify-between pb-4 border-b border-white/5 last:border-b-0">
               <div className="flex items-center gap-3">
-                <Icon size={18} className="text-zinc-400" />
-                <span className="text-sm text-zinc-400">{item.label}</span>
+                <Icon size={18} className="text-white/80" />
+                <span className="text-sm text-white/80">{item.label}</span>
               </div>
               <span className="max-w-[55%] truncate text-right font-medium text-white">
                 {item.value}

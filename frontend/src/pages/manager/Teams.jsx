@@ -115,7 +115,7 @@ const ManagerTeams = () => {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       {/* Header */}
       <section>
         <h1 className="text-3xl font-bold text-white">Team Management</h1>
@@ -169,12 +169,12 @@ const ManagerTeams = () => {
 
       {/* Empty State */}
       {!teamsLoading && !userTeamLoading && allTeams.length === 0 && (
-        <div className="glass-card rounded-lg p-8 border border-white/10 text-center">
-          <p className="text-zinc-400 mb-2">No teams assigned to you</p>
-          <p className="text-xs text-zinc-500">
-            You'll see team data here once you're assigned to a team or manage one.
-          </p>
-        </div>
+          <div className="rounded-lg p-8 border border-white/10 text-center bg-prime text-white">
+            <p className="text-white mb-2">No teams assigned to you</p>
+            <p className="text-xs text-white/80">
+              You'll see team data here once you're assigned to a team or manage one.
+            </p>
+          </div>
       )}
 
       {/* Content */}
@@ -183,33 +183,29 @@ const ManagerTeams = () => {
           {/* Overview Cards */}
           <TeamOverviewCards overview={overviewData} isLoading={overviewLoading} />
 
-          {/* Two-Column Layout */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2">
-              {/* Team Info */}
-              <TeamInfoCard
-                overview={overviewData}
-                team={selectedTeam}
-                isLoading={overviewLoading && !selectedTeam}
-              />
+          {/* Single-column stacked layout */}
+          <div className="space-y-8">
+            {/* Team Info */}
+            <TeamInfoCard
+              overview={overviewData}
+              team={selectedTeam}
+              isLoading={overviewLoading && !selectedTeam}
+            />
 
-              {/* Team Members Table */}
-              <TeamMembersTable snapshot={snapshotData} isLoading={snapshotLoading} />
+            {/* Team Members Table */}
+            <TeamMembersTable snapshot={snapshotData} isLoading={snapshotLoading} />
 
-              {/* Attendance Exceptions */}
-              <AttendanceExceptions snapshot={snapshotData} isLoading={snapshotLoading} />
-            </div>
+            {/* Attendance Exceptions */}
+            <AttendanceExceptions snapshot={snapshotData} isLoading={snapshotLoading} />
 
-            <div className="space-y-8">
-              {/* Office Occupancy */}
-              <OccupancyCard occupancy={occupancyData} isLoading={occupancyLoading} />
-
-              {/* Work Mode Distribution */}
-              <WorkModeChart snapshot={snapshotData} isLoading={snapshotLoading} />
-
-              {/* Productivity */}
+            {/* Productivity and Occupancy side-by-side on md+ */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <ProductivityCard productivity={productivityData} isLoading={productivityLoading} />
+              <OccupancyCard occupancy={occupancyData} isLoading={occupancyLoading} />
             </div>
+
+            {/* Work Mode Distribution */}
+            <WorkModeChart snapshot={snapshotData} isLoading={snapshotLoading} />
           </div>
 
           {/* Daily Snapshot */}

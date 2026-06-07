@@ -201,4 +201,11 @@ textarea:-webkit-autofill:focus {
   .blue-glow {
     box-shadow: 0 0 20px rgba(61, 191, 217, 0.25);
   }
+
+  /* Prime brand utilities */
+  .bg-prime { background-color: var(--primary); }
+  .bg-prime-80 { background-color: rgba(36, 91, 167, 0.8); }
+  .hover\:bg-prime-80:hover { background-color: rgba(36, 91, 167, 0.8); }
+  .bg-prime-dark { background-color: rgba(10, 38, 56, 0.7); }
+  .bg-prime-20 { background-color: rgba(36,91,167,0.12); }
 }

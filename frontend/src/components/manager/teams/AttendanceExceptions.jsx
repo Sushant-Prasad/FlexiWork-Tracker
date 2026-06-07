@@ -60,7 +60,7 @@ const AttendanceExceptions = ({ snapshot, isLoading }) => {
   */
   if (isLoading) {
     return (
-      <div className="glass-card rounded-lg border border-white/10 p-6 mb-8 animate-pulse">
+      <div className="rounded-lg border border-primary/20 p-6 mb-8 animate-pulse bg-prime text-white">
 
         {/* Card Title Skeleton */}
         <div className="h-6 bg-white/20 rounded w-1/3 mb-6"></div>
@@ -68,10 +68,7 @@ const AttendanceExceptions = ({ snapshot, isLoading }) => {
         {/* Exception Row Skeletons */}
         <div className="space-y-4">
           {[...Array(3)].map((_, i) => (
-            <div
-              key={i}
-              className="h-4 bg-white/10 rounded w-full"
-            ></div>
+            <div key={i} className="h-4 bg-white/10 rounded w-full"></div>
           ))}
         </div>
 
@@ -134,15 +131,11 @@ const AttendanceExceptions = ({ snapshot, isLoading }) => {
   */
   if (exceptions.length === 0) {
     return (
-      <div className="glass-card rounded-lg border border-white/10 p-6 mb-8">
+      <div className="rounded-lg border border-primary/20 p-6 mb-8 bg-prime text-white">
 
-        <h3 className="text-lg font-semibold text-white mb-4">
-          Attendance Exceptions
-        </h3>
+        <h3 className="text-lg font-semibold text-white mb-4">Attendance Exceptions</h3>
 
-        <p className="text-zinc-400">
-          ✓ All team members are on track
-        </p>
+        <p className="text-white/80">✓ All team members are on track</p>
 
       </div>
     );
@@ -167,7 +160,7 @@ const AttendanceExceptions = ({ snapshot, isLoading }) => {
   ==========================================
   */
   return (
-    <div className="glass-card rounded-lg border border-white/10 p-6 mb-8">
+  <div className="rounded-lg border border-primary/20 p-6 mb-8 bg-prime text-white">
 
       {/* ======================================
           SECTION HEADER
@@ -283,10 +276,10 @@ const AttendanceExceptions = ({ snapshot, isLoading }) => {
       {/* ======================================
           SUMMARY SECTION
       ====================================== */}
-      <div className="mt-6 p-4 bg-white/5 border border-white/10 rounded-lg">
+      <div className="mt-6 p-4 bg-prime-80 border border-white/10 rounded-lg text-white/80">
 
-        <p className="text-xs text-zinc-400">
-          <strong>{exceptions.length}</strong>
+        <p className="text-xs">
+          <strong className="text-white">{exceptions.length}</strong>
           {" "}
           team member
           {exceptions.length !== 1 ? "s" : ""}

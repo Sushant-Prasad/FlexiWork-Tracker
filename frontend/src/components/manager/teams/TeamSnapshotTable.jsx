@@ -74,7 +74,7 @@ const TeamSnapshotTable = ({ snapshot, isLoading }) => {
           {members.map((member, idx) => (
             <div
               key={idx}
-              className="flex items-center justify-between p-3 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition-colors"
+              className="flex items-center justify-between p-3 bg-prime border border-white/10 rounded-lg hover:bg-prime-80 transition-colors text-white"
             >
               <div className="flex-1">
                 <p className="font-medium text-white">{member.employee}</p>

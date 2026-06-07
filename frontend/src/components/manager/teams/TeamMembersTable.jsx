@@ -36,7 +36,7 @@ const getModeColor = (mode) => {
 const TeamMembersTable = ({ snapshot, isLoading }) => {
   if (isLoading) {
     return (
-      <div className="glass-card rounded-lg border border-white/10 overflow-hidden mb-8 animate-pulse">
+      <div className="rounded-lg border border-primary/20 overflow-hidden mb-8 animate-pulse bg-prime text-white">
         <div className="p-6 border-b border-white/10">
           <div className="h-6 bg-white/20 rounded w-1/4"></div>
         </div>
@@ -53,14 +53,14 @@ const TeamMembersTable = ({ snapshot, isLoading }) => {
 
   if (members.length === 0) {
     return (
-      <div className="glass-card rounded-lg border border-white/10 p-8 text-center mb-8">
-        <p className="text-zinc-400">No team members data available</p>
+      <div className="rounded-lg border border-primary/20 p-8 text-center mb-8 bg-prime text-white">
+        <p className="text-white/80">No team members data available</p>
       </div>
     );
   }
 
   return (
-    <div className="glass-card rounded-lg border border-white/10 overflow-hidden mb-8">
+    <div className="rounded-lg border border-primary/20 overflow-hidden mb-8 bg-prime text-white">
       <div className="p-6 border-b border-white/10">
         <h3 className="text-lg font-semibold text-white">Team Members Status</h3>
       </div>
@@ -68,17 +68,17 @@ const TeamMembersTable = ({ snapshot, isLoading }) => {
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-white/10 bg-white/5">
-              <th className="px-6 py-3 text-left text-xs font-semibold text-zinc-300">Employee</th>
-              <th className="px-6 py-3 text-left text-xs font-semibold text-zinc-300">Planned Mode</th>
-              <th className="px-6 py-3 text-left text-xs font-semibold text-zinc-300">Actual Mode</th>
-              <th className="px-6 py-3 text-left text-xs font-semibold text-zinc-300">Status</th>
-              <th className="px-6 py-3 text-left text-xs font-semibold text-zinc-300">Hours</th>
-            </tr>
+              <tr className="border-b border-white/10 bg-prime">
+                <th className="px-4 py-3 text-left text-xs font-semibold text-white/80">Employee</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-white/80">Planned Mode</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-white/80">Actual Mode</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-white/80">Status</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-white/80">Hours</th>
+              </tr>
           </thead>
           <tbody>
             {members.map((member, idx) => (
-              <tr key={idx} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+              <tr key={idx} className="border-b border-white/5 hover:bg-prime-80 transition-colors">
                 <td className="px-6 py-4">
                   <div>
                     <p className="font-medium text-white">{member.employee}</p>

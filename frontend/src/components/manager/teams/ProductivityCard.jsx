@@ -1,16 +1,13 @@
 import { CheckCircle2, Clock, Eye } from "lucide-react";
 
-const MetricItem = ({ icon: Icon, label, value, unit = "", color = "text-blue-400" }) => (
-  <div className="flex items-center gap-4 p-4 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition-colors">
-    <div className={`p-3 rounded-full bg-white/10 border border-white/20`}>
-      <Icon size={20} className={color} />
+const PillMetric = ({ icon: Icon, label, value, unit = "" }) => (
+  <div className="relative flex flex-col items-center justify-center rounded-xl bg-prime p-4 w-28 h-40">
+    <div className="absolute -top-4 flex items-center justify-center w-12 h-12 rounded-full bg-white/10 border border-white/10">
+      <Icon size={20} className="text-white" />
     </div>
-    <div>
-      <p className="text-sm text-zinc-400">{label}</p>
-      <p className="text-2xl font-bold text-white mt-1">
-        {value}
-        <span className="text-sm text-zinc-400 ml-1">{unit}</span>
-      </p>
+    <div className="mt-6 text-center">
+      <p className="text-sm text-white/80 mb-2">{label}</p>
+      <p className="text-2xl font-bold text-white">{value}<span className="text-sm text-white/80 ml-1">{unit}</span></p>
     </div>
   </div>
 );
@@ -34,33 +31,17 @@ const ProductivityCard = ({ productivity, isLoading }) => {
   const pendingReviews = productivity?.pendingReviews || 0;
 
   return (
-    <div className="glass-card rounded-lg p-6 border border-white/10 mb-8">
-      <h3 className="text-lg font-semibold text-white mb-6">Team Productivity</h3>
+    <div className="rounded-2xl p-6 bg-prime-dark border border-primary/20 mb-8 text-white">
+      <h3 className="text-xl font-semibold text-white mb-6">Team Productivity</h3>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <MetricItem
-          icon={CheckCircle2}
-          label="Tasks Completed Today"
-          value={tasksCompleted}
-          color="text-emerald-400"
-        />
-        <MetricItem
-          icon={Clock}
-          label="Avg Worked Hours"
-          value={averageHours}
-          unit="hrs"
-          color="text-blue-400"
-        />
-        <MetricItem
-          icon={Eye}
-          label="Pending Reviews"
-          value={pendingReviews}
-          color="text-orange-400"
-        />
+      <div className="flex items-start gap-4">
+        <PillMetric icon={CheckCircle2} label="Completed" value={tasksCompleted} />
+        <PillMetric icon={Clock} label="Avg Hours" value={averageHours} unit="h" />
+        <PillMetric icon={Eye} label="Pending" value={pendingReviews} />
       </div>
 
-      <div className="mt-6 p-4 bg-white/5 border border-white/10 rounded-lg">
-        <p className="text-xs text-zinc-400">
+      <div className="mt-6 inline-block p-4 bg-prime rounded-lg">
+        <p className="text-sm text-white/80">
           Updated today at <span className="text-white font-medium">{new Date().toLocaleTimeString()}</span>
         </p>
       </div>
