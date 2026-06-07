@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 const TeamSnapshotTable = ({ snapshot, isLoading }) => {
   if (isLoading) {
     return (
-      <div className="glass-card rounded-lg border border-white/10 overflow-hidden mb-8 animate-pulse">
+        <div className="rounded-xl border border-white/10 overflow-hidden animate-pulse gradient-bg text-white">
         <div className="p-6 border-b border-white/10">
           <div className="h-6 bg-white/20 rounded w-1/3"></div>
         </div>
@@ -28,7 +28,7 @@ const TeamSnapshotTable = ({ snapshot, isLoading }) => {
   };
 
   return (
-    <div className="glass-card rounded-lg border border-white/10 overflow-hidden mb-8">
+      <div className="rounded-xl border border-white/10 overflow-hidden gradient-bg text-white mb-8">
       <div className="p-6 border-b border-white/10">
         <div className="flex items-center justify-between">
           <div>
