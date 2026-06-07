@@ -1,6 +1,12 @@
 import { Building2, User, Users } from "lucide-react";
 
-const TeamInfoCard = ({ overview, isLoading }) => {
+const getManagerName = (overview, team) => {
+  const manager = overview?.manager || team?.managerId || team?.manager;
+  if (typeof manager === "string") return "N/A";
+  return manager?.name || "N/A";
+};
+
+const TeamInfoCard = ({ overview, team, isLoading }) => {
   if (isLoading) {
     return (
       <div className="glass-card rounded-lg p-6 border border-white/10 mb-8 animate-pulse">
@@ -17,25 +23,33 @@ const TeamInfoCard = ({ overview, isLoading }) => {
     );
   }
 
+  const memberCount = overview?.memberCount ?? team?.members?.length ?? 0;
+  const officeCapacity = overview?.officeCapacity ?? team?.officeCapacity ?? 0;
+
   const info = [
     {
       label: "Team Name",
-      value: overview?.teamName || "N/A",
+      value: overview?.teamName || team?.name || "N/A",
       icon: Users,
     },
     {
       label: "Manager",
-      value: overview?.manager?.name || "N/A",
+      value: getManagerName(overview, team),
       icon: User,
     },
     {
+      label: "Members",
+      value: memberCount,
+      icon: Users,
+    },
+    {
       label: "Office Capacity",
-      value: `${overview?.officeCapacity || 0} seats`,
+      value: `${officeCapacity} seats`,
       icon: Building2,
     },
     {
       label: "Site Location",
-      value: overview?.site || "Not specified",
+      value: overview?.site || team?.site || "Not specified",
       icon: Building2,
     },
   ];
@@ -52,7 +66,9 @@ const TeamInfoCard = ({ overview, isLoading }) => {
                 <Icon size={18} className="text-zinc-400" />
                 <span className="text-sm text-zinc-400">{item.label}</span>
               </div>
-              <span className="font-medium text-white">{item.value}</span>
+              <span className="max-w-[55%] truncate text-right font-medium text-white">
+                {item.value}
+              </span>
             </div>
           );
         })}

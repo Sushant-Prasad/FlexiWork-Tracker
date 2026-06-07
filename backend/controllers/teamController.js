@@ -15,7 +15,8 @@ const canManageTeam = (req, team) => {
 	if (!req.user) return false;
 	if (req.user.role === "SYSTEM_ADMIN") return true;
 	if (req.user.role === "MANAGER") {
-		return String(team.managerId) === String(req.user._id);
+		const managerId = team.managerId?._id || team.managerId;
+		return String(managerId) === String(req.user._id);
 	}
 	return false;
 };
@@ -98,7 +99,9 @@ export const listTeams = async (req, res) => {
 			];
 		}
 
-		const teams = await Team.find(query).sort({ createdAt: -1 });
+		const teams = await Team.find(query)
+			.populate("managerId", "name email")
+			.sort({ createdAt: -1 });
 		return res.status(200).json({ teams });
 	} catch (error) {
 		return res.status(500).json({ message: error.message || "Failed to fetch teams" });

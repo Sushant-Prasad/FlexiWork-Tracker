@@ -66,6 +66,10 @@ const ManagerTeams = () => {
     }
   }, [allTeams, selectedTeamId]);
 
+  const selectedTeam = useMemo(() => {
+    return allTeams.find((team) => team._id === selectedTeamId) || null;
+  }, [allTeams, selectedTeamId]);
+
   // Fetch team overview
   const {
     data: overviewData,
@@ -183,7 +187,11 @@ const ManagerTeams = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
               {/* Team Info */}
-              <TeamInfoCard overview={overviewData} isLoading={overviewLoading} />
+              <TeamInfoCard
+                overview={overviewData}
+                team={selectedTeam}
+                isLoading={overviewLoading && !selectedTeam}
+              />
 
               {/* Team Members Table */}
               <TeamMembersTable snapshot={snapshotData} isLoading={snapshotLoading} />
