@@ -1,146 +1,322 @@
-import { Badge } from "@/components/ui/badge";
-import { AlertCircle, CheckCircle2, Clock } from "lucide-react";
+/*
+==================================================
+TEAM INFORMATION CARD
+--------------------------------------------------
+Component:
+TeamInfoCard
 
-const getStatusBadgeColor = (status) => {
-  switch (status) {
-    case "MATCH":
-      return "bg-emerald-500/20 text-emerald-300 border-emerald-500/30";
-    case "DEVIATION":
-      return "bg-orange-500/20 text-orange-300 border-orange-500/30";
-    case "UNLOGGED":
-      return "bg-red-500/20 text-red-300 border-red-500/30";
-    case "UNEXPECTED":
-      return "bg-yellow-500/20 text-yellow-300 border-yellow-500/30";
-    default:
-      return "bg-zinc-500/20 text-zinc-300 border-zinc-500/30";
+Helper Function:
+getManagerName()
+
+Props:
+- overview
+- team
+- isLoading
+
+Purpose:
+Displays essential information about the
+selected team in a structured and
+manager-friendly format.
+
+Used In:
+Manager Teams Dashboard
+
+Related APIs:
+GET /api/teams/:id/overview
+GET /api/teams
+GET /api/teams/my-team
+
+Information Displayed:
+- Team Name
+- Manager Name
+- Member Count
+- Office Capacity
+- Site Location
+
+Business Value:
+Provides managers with a quick overview
+of team ownership, workforce size,
+workspace allocation, and office location.
+
+Workflow:
+1. Receive team data
+2. Extract key team attributes
+3. Format information for display
+4. Render management summary card
+
+Return:
+Team information dashboard card.
+==================================================
+*/
+
+import { Building2, User, Users } from "lucide-react";
+
+/*
+==================================================
+MANAGER NAME RESOLVER
+--------------------------------------------------
+Function:
+getManagerName()
+
+Parameters:
+- overview
+- team
+
+Purpose:
+Safely extracts the manager name from
+multiple possible API response structures.
+
+Workflow:
+1. Check overview.manager
+2. Check team.managerId
+3. Check team.manager
+4. Return manager name
+
+Fallback:
+Returns "N/A" when manager information
+is unavailable.
+
+Business Logic:
+Different API endpoints may return manager
+data in different formats. This helper
+normalizes the response.
+==================================================
+*/
+const getManagerName = (overview, team) => {
+
+  const manager =
+    overview?.manager ||
+    team?.managerId ||
+    team?.manager;
+
+  /*
+  ==========================================
+  HANDLE STRING IDS
+  ------------------------------------------
+  Some APIs may return only the manager id
+  instead of a populated user object.
+
+  Example:
+  "684f4c3ab8f4f1c..."
+
+  In such cases display "N/A".
+  ==========================================
+  */
+  if (typeof manager === "string") {
+    return "N/A";
   }
+
+  return manager?.name || "N/A";
 };
 
-const getModeColor = (mode) => {
-  switch (mode) {
-    case "OFFICE":
-      return "bg-blue-500/20 text-blue-300 border-blue-500/30";
-    case "REMOTE":
-      return "bg-purple-500/20 text-purple-300 border-purple-500/30";
-    case "HYBRID":
-      return "bg-emerald-500/20 text-emerald-300 border-emerald-500/30";
-    case "ABSENT":
-      return "bg-red-500/20 text-red-300 border-red-500/30";
-    case "UNLOGGED":
-      return "bg-gray-500/20 text-gray-300 border-gray-500/30";
-    default:
-      return "bg-zinc-500/20 text-zinc-300 border-zinc-500/30";
-  }
-};
+/*
+==================================================
+TEAM INFORMATION CARD
+--------------------------------------------------
+Component:
+TeamInfoCard
 
-const TeamMembersTable = ({ snapshot, isLoading }) => {
+Purpose:
+Displays a summary of team metadata and
+organizational details.
+
+Features:
+- Team Overview
+- Manager Information
+- Workforce Size
+- Office Capacity
+- Site Information
+
+Business Value:
+Provides managers with immediate visibility
+into the operational structure of the team.
+==================================================
+*/
+const TeamInfoCard = ({
+  overview,
+  team,
+  isLoading,
+}) => {
+
+  /*
+  ==========================================
+  LOADING STATE
+  ------------------------------------------
+  Purpose:
+  Displays skeleton placeholders while
+  team information is loading.
+
+  Business Logic:
+  Prevents layout shifts and improves
+  perceived application performance.
+  ==========================================
+  */
   if (isLoading) {
     return (
-      <div className="rounded-lg border border-primary/20 overflow-hidden mb-8 animate-pulse bg-prime text-white">
-        <div className="p-6 border-b border-white/10">
-          <div className="h-6 bg-white/20 rounded w-1/4"></div>
-        </div>
-        <div className="p-6 space-y-4">
-          {[...Array(5)].map((_, i) => (
-            <div key={i} className="h-4 bg-white/10 rounded w-full"></div>
+      <div className="glass-card rounded-lg p-6 border border-white/10 mb-8 animate-pulse">
+
+        {/* Card Title Skeleton */}
+        <div className="h-6 bg-white/20 rounded w-1/4 mb-6"></div>
+
+        {/* Information Row Skeletons */}
+        <div className="space-y-4">
+
+          {[...Array(4)].map((_, i) => (
+            <div
+              key={i}
+              className="flex justify-between"
+            >
+
+              <div className="h-4 bg-white/10 rounded w-1/4"></div>
+
+              <div className="h-4 bg-white/20 rounded w-1/3"></div>
+
+            </div>
           ))}
+
         </div>
+
       </div>
     );
   }
 
-  const members = snapshot?.members || [];
+  /*
+  ==========================================
+  TEAM METRICS EXTRACTION
+  ------------------------------------------
+  Purpose:
+  Safely extracts team statistics from
+  overview or team response objects.
 
-  if (members.length === 0) {
-    return (
-      <div className="rounded-lg border border-primary/20 p-8 text-center mb-8 bg-prime text-white">
-        <p className="text-white/80">No team members data available</p>
-      </div>
-    );
-  }
+  Fallback Strategy:
+  Uses team data if overview data
+  is unavailable.
+  ==========================================
+  */
+  const memberCount =
+    overview?.memberCount ??
+    team?.members?.length ??
+    0;
 
+  const officeCapacity =
+    overview?.officeCapacity ??
+    team?.officeCapacity ??
+    0;
+
+  /*
+  ==========================================
+  TEAM INFORMATION CONFIGURATION
+  ------------------------------------------
+  Purpose:
+  Defines all information rows displayed
+  inside the card.
+
+  Business Logic:
+  Centralizes display configuration and
+  simplifies rendering.
+  ==========================================
+  */
+  const info = [
+    {
+      label: "Team Name",
+      value: overview?.teamName || team?.name || "N/A",
+      icon: Users,
+    },
+    {
+      label: "Manager",
+      value: getManagerName(overview, team),
+      icon: User,
+    },
+    {
+      label: "Members",
+      value: memberCount,
+      icon: Users,
+    },
+    {
+      label: "Office Capacity",
+      value: `${officeCapacity} seats`,
+      icon: Building2,
+    },
+    {
+      label: "Site Location",
+      value: overview?.site || team?.site || "Not specified",
+      icon: Building2,
+    },
+  ];
+
+  /*
+  ==========================================
+  TEAM INFORMATION DASHBOARD
+  ------------------------------------------
+  Purpose:
+  Displays organizational and operational
+  details about the selected team.
+
+  Sections:
+  - Header
+  - Information Rows
+
+  Business Value:
+  Gives managers quick access to critical
+  team metadata.
+  ==========================================
+  */
   return (
-    <div className="rounded-lg border border-primary/20 overflow-hidden mb-8 bg-prime text-white">
-      <div className="p-6 border-b border-white/10">
-        <h3 className="text-lg font-semibold text-white">Team Members Status</h3>
+    <div className="rounded-lg p-6 bg-prime border border-primary/20 mb-8 text-white">
+
+      {/* ======================================
+          SECTION HEADER
+      ====================================== */}
+      <h3 className="text-lg font-semibold text-white mb-6">
+        Team Information
+      </h3>
+
+      {/* ======================================
+          INFORMATION LIST
+      ====================================== */}
+      <div className="space-y-4">
+
+        {info.map((item, idx) => {
+
+          const Icon = item.icon;
+
+          return (
+            <div
+              key={idx}
+              className="flex items-center justify-between pb-4 border-b border-white/5 last:border-b-0"
+            >
+
+              {/* ==================================
+                  LABEL SECTION
+              ================================== */}
+              <div className="flex items-center gap-3">
+
+                <Icon
+                  size={18}
+                  className="text-white/80"
+                />
+
+                <span className="text-sm text-white/80">
+                  {item.label}
+                </span>
+
+              </div>
+
+              {/* ==================================
+                  VALUE SECTION
+              ================================== */}
+              <span className="max-w-[55%] truncate text-right font-medium text-white">
+                {item.value}
+              </span>
+
+            </div>
+          );
+        })}
+
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="w-full">
-          <thead>
-              <tr className="border-b border-white/10 bg-prime">
-                <th className="px-4 py-3 text-left text-xs font-semibold text-white/80">Employee</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-white/80">Planned Mode</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-white/80">Actual Mode</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-white/80">Status</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-white/80">Hours</th>
-              </tr>
-          </thead>
-          <tbody>
-            {members.map((member, idx) => (
-              <tr key={idx} className="border-b border-white/5 hover:bg-prime-80 transition-colors">
-                <td className="px-6 py-4">
-                  <div>
-                    <p className="font-medium text-white">{member.employee}</p>
-                    <p className="text-xs text-zinc-400">{member.role}</p>
-                  </div>
-                </td>
-                <td className="px-6 py-4">
-                  <Badge className={`${getModeColor(member.plannedMode)} border`}>
-                    {member.plannedMode}
-                  </Badge>
-                </td>
-                <td className="px-6 py-4">
-                  <Badge className={`${getModeColor(member.actualMode)} border`}>
-                    {member.actualMode}
-                  </Badge>
-                </td>
-                <td className="px-6 py-4">
-                  <div className="flex items-center gap-2">
-                    {member.attendanceStatus === "MATCH" && (
-                      <>
-                        <CheckCircle2 size={16} className="text-emerald-400" />
-                        <Badge className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                          Match
-                        </Badge>
-                      </>
-                    )}
-                    {member.attendanceStatus === "DEVIATION" && (
-                      <>
-                        <AlertCircle size={16} className="text-orange-400" />
-                        <Badge className="bg-orange-500/20 text-orange-300 border border-orange-500/30">
-                          Deviation
-                        </Badge>
-                      </>
-                    )}
-                    {member.attendanceStatus === "UNLOGGED" && (
-                      <>
-                        <Clock size={16} className="text-red-400" />
-                        <Badge className="bg-red-500/20 text-red-300 border border-red-500/30">
-                          Unlogged
-                        </Badge>
-                      </>
-                    )}
-                    {member.attendanceStatus === "UNEXPECTED" && (
-                      <>
-                        <AlertCircle size={16} className="text-yellow-400" />
-                        <Badge className="bg-yellow-500/20 text-yellow-300 border border-yellow-500/30">
-                          Unexpected
-                        </Badge>
-                      </>
-                    )}
-                  </div>
-                </td>
-                <td className="px-6 py-4">
-                  <span className="text-white font-medium">{member.workedHours.toFixed(1)}h</span>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
     </div>
   );
 };
 
-export default TeamMembersTable;
+export default TeamInfoCard;
