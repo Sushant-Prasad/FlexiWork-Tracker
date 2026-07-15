@@ -7,11 +7,9 @@ WORK LOG CALENDAR COMPONENT
 --------------------------------------------------
 Component:
 WorkLogCalendar
-
 Props:
 - logs
 - isLoading
-
 Purpose:
 Displays a compact monthly calendar that
 visualizes employee work logs by
